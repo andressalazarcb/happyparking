@@ -1,6 +1,6 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking.parking;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.car;
 
-public interface ControllerParking {
+public interface ParkingController {
 	
 	public Object getIn();
 	public Object findVehicles();
