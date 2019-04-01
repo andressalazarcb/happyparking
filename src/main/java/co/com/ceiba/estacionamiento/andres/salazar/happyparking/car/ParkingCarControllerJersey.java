@@ -3,6 +3,7 @@ package co.com.ceiba.estacionamiento.andres.salazar.happyparking.car;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -23,23 +24,32 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyPark
 @Path("/parkinglot/cars")
 public class ParkingCarControllerJersey implements ParkingController {
 	
-	private CarRepository repositoryParkingCar;
-	
 	@Autowired
     private ObjectFactory<HappyParkingResponse> happyParkingResponseObjectFactory;
+	
+	private CarRepository carRepository;
+	
+	private CarService carService;
+
+	@Autowired
+	public ParkingCarControllerJersey(CarRepository carRepository, CarService carService) {
+		this.carRepository = carRepository;
+		this.carService = carService;
+	}
 
 	public ParkingCarControllerJersey() {
 	}
 
-	@Autowired
-	public ParkingCarControllerJersey(CarRepository repositoryParkingCar) {
-		this.repositoryParkingCar = repositoryParkingCar;
-	}
-
+	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Object getIn() {
-		return "Hello from Spring";
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Object getIn(Car car) {
+		Car carSaved = carService.save(car);
+		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
+		happyParkingResponse.setHttpStatus(HttpStatus.CREATED);
+		happyParkingResponse.setContent(carSaved);
+		return happyParkingResponse;
 	}
 
 	@GET
@@ -52,12 +62,12 @@ public class ParkingCarControllerJersey implements ParkingController {
 	@Path("/{vehiclePlate}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Object findVehicle(@PathParam("vehiclePlate") String vehiclePlateParam) {
-		Optional<Car> parkingOrderCarOptional = repositoryParkingCar.findById(vehiclePlateParam);
+		Optional<Car> optional = carRepository.findById(vehiclePlateParam);
 		
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
-		if(parkingOrderCarOptional.isPresent()) {
+		if(optional.isPresent()) {
 			happyParkingResponse.setHttpStatus(HttpStatus.OK);
-			happyParkingResponse.setContent(parkingOrderCarOptional.get());
+			happyParkingResponse.setContent(optional.get());
 		}else {
 			happyParkingResponse.setHttpStatus(HttpStatus.NO_CONTENT);
 		}
