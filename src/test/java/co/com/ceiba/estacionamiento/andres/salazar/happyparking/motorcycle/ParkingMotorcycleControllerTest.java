@@ -19,9 +19,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestClientException;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingResponse;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Motorcycle;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -45,7 +46,7 @@ public class ParkingMotorcycleControllerTest {
 	public void testGetIn() {
 		// Arange
 		String plate = "AAA123";
-		String url = "/parkinglot/cars/";
+		String url = "/parkinglot/motorcycles/";
 		String requestJson = "{\"plate\":\"AAA123\"}";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -67,6 +68,41 @@ public class ParkingMotorcycleControllerTest {
 		assertThat(entity.getBody().getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 		assertThat(entity.getBody().getContent()).extracting("plate").contains("AAA123");
 		assertThat(entity.getBody().getContent()).extracting("parking").contains(true);
+	}
+	
+	@Test(expected = RestClientException.class)
+	public void testGetInExistSameMotorcycleInParking() {
+		// Arange
+		String plate = "AAA123";
+		String url = "/parkinglot/motorcycles/";
+		String requestJson = "{\"plate\":\"AAA123\"}";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
+
+		Motorcycle motorEntity = new Motorcycle();
+		motorEntity.setPlate(plate);
+		motorEntity.setParking(true);
+
+		when(motorcycleRepository.findMotorcycleByPlateAndIsParking(plate, true)).thenReturn(new Motorcycle());
+
+		// Act
+		restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+
+	}
+	
+	@Test(expected = RestClientException.class)
+	public void testGetInThereAreNotSpaceToParking() {
+		// Arange
+		String url = "/parkinglot/motorcycles/";
+		String requestJson = "{\"plate\":\"AAA123\"}";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
+		when(motorcycleRepository.findCountMotorcycleByIsParking(true)).thenReturn(10L);
+
+		// Act
+		restTemplate.postForEntity(url, request, HappyParkingResponse.class);
 	}
 
 }

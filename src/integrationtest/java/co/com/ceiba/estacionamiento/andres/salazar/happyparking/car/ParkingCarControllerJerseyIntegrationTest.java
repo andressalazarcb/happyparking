@@ -46,8 +46,8 @@ public class ParkingCarControllerJerseyIntegrationTest {
 		String requestJson = "{\"plate\":\"BAA123\"}";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-
 		HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
+		
 		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request, HappyParkingResponse.class);
 		
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
