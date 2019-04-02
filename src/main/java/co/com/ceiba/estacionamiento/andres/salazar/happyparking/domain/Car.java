@@ -10,6 +10,7 @@ public class Car extends AbstractVehicle{
 		carCopy.setParking(this.isParking());
 		carCopy.setParkingOrders(this.getParkingOrders());
 		carCopy.setPlate(this.getPlate());
+		carCopy.setType(this.getType());
 		return carCopy;
 	}
 

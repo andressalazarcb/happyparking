@@ -1,10 +1,21 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain;
 
+import java.math.BigDecimal;
+
 public class ParkingOrder {
 
 	private Long startDate;
 	private Long endDate;
 	private boolean active;
+	private BigDecimal price;
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
 
 	public Long getStartDate() {
 		return startDate;

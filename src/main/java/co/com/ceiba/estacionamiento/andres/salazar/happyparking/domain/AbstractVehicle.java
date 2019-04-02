@@ -8,8 +8,17 @@ public abstract class AbstractVehicle {
 
 	@Id
 	private String plate;
-	private boolean isParking;
+	private String type;
 	private List<ParkingOrder> parkingOrders;
+	private boolean isParking;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	public boolean isParking() {
 		return isParking;

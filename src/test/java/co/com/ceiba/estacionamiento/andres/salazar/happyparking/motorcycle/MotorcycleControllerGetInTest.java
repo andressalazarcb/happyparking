@@ -21,20 +21,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestClientException;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Motorcycle;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ParkingMotorcycleControllerTest {
+public class MotorcycleControllerGetInTest {
 
 	@Autowired
 	private TestRestTemplate restTemplate;
 
 	@MockBean
-	private MotorcycleRepository motorcycleRepository;
+	private MotorcycleRepositoryMongo motorcycleRepository;
 
 	@Before
 	public void setUp() throws Exception {
@@ -65,14 +64,14 @@ public class ParkingMotorcycleControllerTest {
 				HappyParkingResponse.class);
 
 		// Assert
-		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
 		assertThat(entity.getBody().getStatus()).isEqualTo(Status.CREATED.getStatusCode());
 		assertThat(entity.getBody().getContent()).extracting("plate").contains("AAA123");
 		assertThat(entity.getBody().getContent()).extracting("parking").contains(true);
 	}
 	
-	@Test(expected = RestClientException.class)
+	@Test
 	public void testGetInExistSameMotorcycleInParking() {
 		// Arange
 		String plate = "AAA123";
@@ -88,12 +87,18 @@ public class ParkingMotorcycleControllerTest {
 
 		when(motorcycleRepository.findMotorcycleByPlateAndIsParking(plate, true)).thenReturn(new Motorcycle());
 
-		// Act
-		restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+		//Act
+		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+						
+		//Assert
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
+        assertThat(entity.getBody().getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
+        assertThat(entity.getBody().getContent()).isEqualTo("hay una moto parqueada");
 
 	}
 	
-	@Test(expected = RestClientException.class)
+	@Test
 	public void testGetInThereAreNotSpaceToParking() {
 		// Arange
 		String url = "/parkinglot/motorcycles/";
@@ -103,8 +108,14 @@ public class ParkingMotorcycleControllerTest {
 		HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
 		when(motorcycleRepository.findCountMotorcycleByIsParking(true)).thenReturn(10L);
 
-		// Act
-		restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+		//Act
+		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+				
+		//Assert
+        assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
+        assertThat(entity.getBody().getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
+        assertThat(entity.getBody().getContent()).isEqualTo("no hay espacio para motos");
 	}
 
 }

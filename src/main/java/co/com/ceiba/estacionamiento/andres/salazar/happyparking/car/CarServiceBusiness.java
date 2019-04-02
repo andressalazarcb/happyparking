@@ -1,20 +1,24 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.car;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.HappyParkingException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Car;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.ParkingOrder;
 
 @Service
 public class CarServiceBusiness implements CarService {
 
-	private CarRepository carRepository;
+	private CarRepositoryMongo carRepository;
 
 	private HappyParkingTime happyParkingTime;
 
 	@Autowired
-	public CarServiceBusiness(CarRepository carRepository, HappyParkingTime happyParkingTime) {
+	public CarServiceBusiness(CarRepositoryMongo carRepository, HappyParkingTime happyParkingTime) {
 		this.carRepository = carRepository;
 		this.happyParkingTime = happyParkingTime;
 	}
@@ -29,6 +33,11 @@ public class CarServiceBusiness implements CarService {
 		checkIfAbleToParkingDay(car.getPlate());
 		Car carToSave = car.copy();
 		carToSave.setParking(true);
+		carToSave.setType("Carro");
+		ParkingOrder parkingOrder = new ParkingOrder();
+		parkingOrder.setActive(true);
+		parkingOrder.setStartDate(System.currentTimeMillis());
+		carToSave.setParkingOrders(Arrays.asList(parkingOrder));
 		return carRepository.save(carToSave);
 	}
 
@@ -61,6 +70,12 @@ public class CarServiceBusiness implements CarService {
 		default:
 			return false;
 		}
+	}
+
+	@Override
+	public Stream<Car> findAllCarsParking() {
+		Stream<Car> stream = carRepository.findAllCarsByIsParkingTrueAndStream();
+		return stream;
 	}
 
 }

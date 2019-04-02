@@ -1,16 +1,13 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.car;
 
-import java.util.ArrayList;
-import java.util.Optional;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.ObjectFactory;
@@ -22,63 +19,58 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyPark
 
 @Controller
 @Path("/parkinglot/cars")
-public class ParkingCarControllerJersey implements ParkingController {
+public class CarControllerJersey implements CarController {
 	
 	@Autowired
     private ObjectFactory<HappyParkingResponse> happyParkingResponseObjectFactory;
 	
-	private CarRepository carRepository;
+	private CarRepositoryMongo carRepository;
 	
 	private CarService carService;
 
 	@Autowired
-	public ParkingCarControllerJersey(CarRepository carRepository, CarService carService) {
+	public CarControllerJersey(CarRepositoryMongo carRepository, CarService carService) {
 		this.carRepository = carRepository;
 		this.carService = carService;
 	}
 
-	public ParkingCarControllerJersey() {
+	public CarControllerJersey() {
 	}
 
 	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Object getIn(Car car) {
+	public Response getIn(Car car) {
 		Car carSaved = carService.save(car);
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
 		happyParkingResponse.setStatus(Status.CREATED.getStatusCode());
 		happyParkingResponse.setContent(carSaved);
-		return happyParkingResponse;
+		
+		return Response
+			      .status(Status.CREATED)
+			      .entity(happyParkingResponse)
+			      .type(MediaType.APPLICATION_JSON)
+			      .build();
 	}
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Object findVehicles() {
-		return new ArrayList<String>();
-	}
 	
+	@Override
 	@GET
-	@Path("/{vehiclePlate}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Object findVehicle(@PathParam("vehiclePlate") String vehiclePlateParam) {
-		Optional<Car> optional = carRepository.findById(vehiclePlateParam);
-		
+	public Response findAllVehiclesParking() {
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
-		if(optional.isPresent()) {
+		Status status = Status.NO_CONTENT;
+		if(carRepository.findCountCarsByIsParking(true) > 0) {
+			status = Status.OK;
 			happyParkingResponse.setStatus(Status.OK.getStatusCode());
-			happyParkingResponse.setContent(optional.get());
-		}else {
-			happyParkingResponse.setStatus(Status.NO_CONTENT.getStatusCode());
+			happyParkingResponse.setContent(carService.findAllCarsParking());
 		}
 		
-		return happyParkingResponse;
-	}
-
-	@PUT
-	@Produces(MediaType.APPLICATION_JSON)
-	public Object getOut() {
-		return "Hello from Spring";
+		return Response
+			      .status(status)
+			      .entity(happyParkingResponse)
+			      .build();
 	}
 
 }

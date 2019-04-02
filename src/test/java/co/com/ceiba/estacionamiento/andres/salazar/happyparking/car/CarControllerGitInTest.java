@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import java.util.Optional;
-
 import javax.ws.rs.core.Response.Status;
 
 import org.junit.After;
@@ -23,32 +21,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestClientException;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Car;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.CarBuilder;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingResponse;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.ParkingOrder;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.ParkingOrderBuilder;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ParkingCarControllerJerseyTest {
+public class CarControllerGitInTest {
 
 	@Autowired
 	private TestRestTemplate restTemplate;
 
 	@MockBean
-	private CarRepository carRepository;
+	private CarRepositoryMongo carRepository;
 
 	@MockBean
 	private HappyParkingTime happyParkingTime;
-
-	@Autowired
-	private ParkingOrderBuilder parkingOrderBuilder;
-
-	@Autowired
-	private CarBuilder carBuilder;
 
 	@Before
 	public void setUp() throws Exception {
@@ -80,7 +68,7 @@ public class ParkingCarControllerJerseyTest {
 				HappyParkingResponse.class);
 
 		// Assert
-		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
 		assertThat(entity.getBody().getStatus()).isEqualTo(Status.CREATED.getStatusCode());
 		assertThat(entity.getBody().getContent()).extracting("plate").contains("AAA123");
@@ -109,14 +97,14 @@ public class ParkingCarControllerJerseyTest {
 				HappyParkingResponse.class);
 
 		// Assert
-		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
 		assertThat(entity.getBody().getStatus()).isEqualTo(Status.CREATED.getStatusCode());
 		assertThat(entity.getBody().getContent()).extracting("plate").contains("AAA123");
 		assertThat(entity.getBody().getContent()).extracting("parking").contains(true);
 	}
 
-	@Test(expected = RestClientException.class)
+	@Test
 	public void testGetInPlateStartWithAAndWednesday() {
 		// Arange
 		String plate = "AAA123";
@@ -134,8 +122,13 @@ public class ParkingCarControllerJerseyTest {
 		when(happyParkingTime.getDay()).thenReturn("Wednesday");
 
 		// Act
-		restTemplate.postForEntity(url, request, HappyParkingResponse.class);
-
+		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+		
+		// Assert
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
+		assertThat(entity.getBody().getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
+		assertThat(entity.getBody().getContent()).isEqualTo("no puede ingresar porque no esta en un dia habil");
 	}
 
 	@Test
@@ -160,7 +153,7 @@ public class ParkingCarControllerJerseyTest {
 				HappyParkingResponse.class);
 
 		// Assert
-		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
 		assertThat(entity.getBody().getStatus()).isEqualTo(Status.CREATED.getStatusCode());
 		assertThat(entity.getBody().getContent()).extracting("plate").contains("BAA123");
@@ -168,7 +161,7 @@ public class ParkingCarControllerJerseyTest {
 	}
 	
 	
-	@Test(expected = RestClientException.class)
+	@Test
 	public void testGetInExistSameCarInParking() {
 		// Arange
 		String plate = "AAA123";
@@ -185,11 +178,16 @@ public class ParkingCarControllerJerseyTest {
 		when(carRepository.findCarByPlateAndIsParking(plate, true)).thenReturn(new Car());
 
 		// Act
-		restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request, HappyParkingResponse.class);
 
+		// Assert
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
+		assertThat(entity.getBody().getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
+		assertThat(entity.getBody().getContent()).isEqualTo("hay un carro parqueado");
 	}
 	
-	@Test(expected = RestClientException.class)
+	@Test
 	public void testGetInThereAreNotSpaceToParking() {
 		// Arange
 		String url = "/parkinglot/cars/";
@@ -200,27 +198,14 @@ public class ParkingCarControllerJerseyTest {
 		when(carRepository.findCountCarsByIsParking(true)).thenReturn(20L);
 
 		// Act
-		restTemplate.postForEntity(url, request, HappyParkingResponse.class);
-	}
-	
-
-	@Test
-	public void testFindVehicle() {
-		String vehiclePlateParam = "AAA321";
-
-		ParkingOrder parkingOrder = parkingOrderBuilder.getParkingOrder();
-
-		Car carValue = carBuilder.buildPlate(vehiclePlateParam).buildAddParkingOrder(parkingOrder).getCar();
-
-		when(carRepository.findById(vehiclePlateParam)).thenReturn(Optional.of(carValue));
-
-		ResponseEntity<HappyParkingResponse> entity = this.restTemplate.getForEntity("/parkinglot/cars/AAA321",
-				HappyParkingResponse.class);
-		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
+		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+		
+		// Assert
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
-		assertThat(entity.getBody().getStatus()).isEqualTo(Status.OK.getStatusCode());
-		assertThat(entity.getBody().getContent()).extracting("plate").contains(vehiclePlateParam);
-		assertThat(entity.getBody().getContent()).extracting("parking").contains(true);
+		assertThat(entity.getBody().getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
+		assertThat(entity.getBody().getContent()).isEqualTo("no hay espacio para carros");
 	}
+
 
 }

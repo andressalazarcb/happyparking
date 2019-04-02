@@ -1,10 +1,12 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.motorcycle;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.ObjectFactory;
@@ -16,42 +18,56 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Motorcycl
 
 @Controller
 @Path("/parkinglot/motorcycles")
-public class ParkingMotorcycleControllerJersey implements ParkingMotorcycleController {
+public class MotorcycleControllerJersey implements MotorcycleController {
 	
 	@Autowired
     private ObjectFactory<HappyParkingResponse> happyParkingResponseObjectFactory;
 	
 	private MotorcycleService motorcycleService;
 	
+	private MotorcycleRepositoryMongo motorcycleRepository;
+	
 	@Autowired
-	public ParkingMotorcycleControllerJersey(MotorcycleService motorcycleService) {
+	public MotorcycleControllerJersey(MotorcycleService motorcycleService,
+			MotorcycleRepositoryMongo motorcycleRepository) {
 		this.motorcycleService = motorcycleService;
+		this.motorcycleRepository = motorcycleRepository;
 	}
+	
 
-	public ParkingMotorcycleControllerJersey() {
+	public MotorcycleControllerJersey() {
 	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Object getIn(Motorcycle motorcycle) {
+	public Response getIn(Motorcycle motorcycle) {
 		Motorcycle motorcycleSaved = motorcycleService.save(motorcycle);
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
 		happyParkingResponse.setStatus(Status.CREATED.getStatusCode());
 		happyParkingResponse.setContent(motorcycleSaved);
-		return happyParkingResponse;
+		return Response
+			      .status(Status.CREATED)
+			      .entity(happyParkingResponse)
+			      .type(MediaType.APPLICATION_JSON)
+			      .build();
 	}
 
-	public Object findVehicles() {
-		return null;
-	}
-
-	public Object getOut() {
-		return null;
-	}
-
-	public Object findVehicle(String vehiclePlateParam) {
-		return null;
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findAllVehiclesParking() {
+		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
+		Status status = Status.NO_CONTENT;
+		if(motorcycleRepository.findCountMotorcycleByIsParking(true) > 0) {
+			status = Status.OK;
+			happyParkingResponse.setStatus(Status.OK.getStatusCode());
+			happyParkingResponse.setContent(motorcycleService.findAllMotorcyclesParking());
+		}
+		
+		return Response
+			      .status(status)
+			      .entity(happyParkingResponse)
+			      .build();
 	}
 
 }

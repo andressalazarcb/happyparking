@@ -1,6 +1,0 @@
-/* 1 */
-{
-    "_id" : "WBG456",
-    "isParking" : true,
-    "_class" : "co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Car"
-}
