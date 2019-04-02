@@ -12,6 +12,7 @@ public class JerseyConfig extends ResourceConfig {
 	public JerseyConfig() {
 		register(ParkingCarControllerJersey.class);
 		register(ParkingMotorcycleControllerJersey.class);
+		register(HappyParkingException.class);
 	}
 
 }

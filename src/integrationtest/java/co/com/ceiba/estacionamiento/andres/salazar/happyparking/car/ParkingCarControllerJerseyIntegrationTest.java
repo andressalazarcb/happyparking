@@ -2,6 +2,7 @@ package co.com.ceiba.estacionamiento.andres.salazar.happyparking.car;
 
 import static org.assertj.core.api.Assertions.*;
 
+import javax.ws.rs.core.Response.Status;
 
 import org.junit.After;
 import org.junit.Before;
@@ -52,7 +53,7 @@ public class ParkingCarControllerJerseyIntegrationTest {
 		
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
-        assertThat(entity.getBody().getHttpStatus()).isEqualTo(HttpStatus.CREATED);
+        assertThat(entity.getBody().getStatus()).isEqualTo(Status.CREATED.getStatusCode());
         assertThat(entity.getBody().getContent()).extracting("plate").contains("BAA123");
         assertThat(entity.getBody().getContent()).extracting("parking").contains(true);
 	}

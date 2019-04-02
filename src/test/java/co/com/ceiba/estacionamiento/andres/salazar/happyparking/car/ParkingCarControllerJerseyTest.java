@@ -6,6 +6,8 @@ import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
+import javax.ws.rs.core.Response.Status;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestClientException;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.HappyParkingTime;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Car;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.CarBuilder;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingResponse;
@@ -81,7 +82,7 @@ public class ParkingCarControllerJerseyTest {
 		// Assert
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
-		assertThat(entity.getBody().getHttpStatus()).isEqualTo(HttpStatus.CREATED);
+		assertThat(entity.getBody().getStatus()).isEqualTo(Status.CREATED.getStatusCode());
 		assertThat(entity.getBody().getContent()).extracting("plate").contains("AAA123");
 		assertThat(entity.getBody().getContent()).extracting("parking").contains(true);
 	}
@@ -110,7 +111,7 @@ public class ParkingCarControllerJerseyTest {
 		// Assert
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
-		assertThat(entity.getBody().getHttpStatus()).isEqualTo(HttpStatus.CREATED);
+		assertThat(entity.getBody().getStatus()).isEqualTo(Status.CREATED.getStatusCode());
 		assertThat(entity.getBody().getContent()).extracting("plate").contains("AAA123");
 		assertThat(entity.getBody().getContent()).extracting("parking").contains(true);
 	}
@@ -161,7 +162,7 @@ public class ParkingCarControllerJerseyTest {
 		// Assert
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
-		assertThat(entity.getBody().getHttpStatus()).isEqualTo(HttpStatus.CREATED);
+		assertThat(entity.getBody().getStatus()).isEqualTo(Status.CREATED.getStatusCode());
 		assertThat(entity.getBody().getContent()).extracting("plate").contains("BAA123");
 		assertThat(entity.getBody().getContent()).extracting("parking").contains(true);
 	}
@@ -217,7 +218,7 @@ public class ParkingCarControllerJerseyTest {
 				HappyParkingResponse.class);
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
-		assertThat(entity.getBody().getHttpStatus()).isEqualTo(HttpStatus.OK);
+		assertThat(entity.getBody().getStatus()).isEqualTo(Status.OK.getStatusCode());
 		assertThat(entity.getBody().getContent()).extracting("plate").contains(vehiclePlateParam);
 		assertThat(entity.getBody().getContent()).extracting("parking").contains(true);
 	}

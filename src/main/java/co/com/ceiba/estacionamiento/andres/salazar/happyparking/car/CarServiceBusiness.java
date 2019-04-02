@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.HappyParkingException;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.HappyParkingTime;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Car;
 
 @Service

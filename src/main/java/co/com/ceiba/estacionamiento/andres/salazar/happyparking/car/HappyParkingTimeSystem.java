@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.car;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

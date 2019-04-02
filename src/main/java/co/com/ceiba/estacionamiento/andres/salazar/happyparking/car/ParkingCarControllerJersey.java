@@ -11,10 +11,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Car;
@@ -47,7 +47,7 @@ public class ParkingCarControllerJersey implements ParkingController {
 	public Object getIn(Car car) {
 		Car carSaved = carService.save(car);
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
-		happyParkingResponse.setHttpStatus(HttpStatus.CREATED);
+		happyParkingResponse.setStatus(Status.CREATED.getStatusCode());
 		happyParkingResponse.setContent(carSaved);
 		return happyParkingResponse;
 	}
@@ -66,10 +66,10 @@ public class ParkingCarControllerJersey implements ParkingController {
 		
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
 		if(optional.isPresent()) {
-			happyParkingResponse.setHttpStatus(HttpStatus.OK);
+			happyParkingResponse.setStatus(Status.OK.getStatusCode());
 			happyParkingResponse.setContent(optional.get());
 		}else {
-			happyParkingResponse.setHttpStatus(HttpStatus.NO_CONTENT);
+			happyParkingResponse.setStatus(Status.NO_CONTENT.getStatusCode());
 		}
 		
 		return happyParkingResponse;

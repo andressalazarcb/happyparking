@@ -5,10 +5,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingResponse;
@@ -37,7 +37,7 @@ public class ParkingMotorcycleControllerJersey implements ParkingMotorcycleContr
 	public Object getIn(Motorcycle motorcycle) {
 		Motorcycle motorcycleSaved = motorcycleService.save(motorcycle);
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
-		happyParkingResponse.setHttpStatus(HttpStatus.CREATED);
+		happyParkingResponse.setStatus(Status.CREATED.getStatusCode());
 		happyParkingResponse.setContent(motorcycleSaved);
 		return happyParkingResponse;
 	}

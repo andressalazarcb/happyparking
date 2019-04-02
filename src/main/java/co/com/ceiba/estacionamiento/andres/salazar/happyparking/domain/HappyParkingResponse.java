@@ -1,5 +1,7 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain;
 
+import javax.ws.rs.core.Response.Status;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -8,16 +10,8 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class HappyParkingResponse {
 	
-	private HttpStatus httpStatus;
+	private int status;
 	private Object content;
-	
-	public HttpStatus getHttpStatus() {
-		return httpStatus;
-	}
-	
-	public void setHttpStatus(HttpStatus httpStatus) {
-		this.httpStatus = httpStatus;
-	}
 	
 	public Object getContent() {
 		return content;
@@ -27,6 +21,12 @@ public class HappyParkingResponse {
 		this.content = content;
 	}
 
-	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
 }
