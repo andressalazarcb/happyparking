@@ -16,7 +16,7 @@ public class HappyParkingTimeSystem implements HappyParkingTime{
 		this.simpleDateformat = simpleDateformat;
 	}
 
-	public String getDay() {
+	public String geCurrentDay() {
 		return simpleDateformat.format(new Date());
 	}
 

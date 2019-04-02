@@ -2,6 +2,6 @@ package co.com.ceiba.estacionamiento.andres.salazar.happyparking.car;
 
 public interface HappyParkingTime {
 	
-	public String getDay();
+	public String geCurrentDay();
 
 }

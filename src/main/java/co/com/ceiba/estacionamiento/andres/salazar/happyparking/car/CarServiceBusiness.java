@@ -23,9 +23,6 @@ public class CarServiceBusiness implements CarService {
 		this.happyParkingTime = happyParkingTime;
 	}
 
-	public CarServiceBusiness() {
-	}
-
 	@Override
 	public Car save(Car car) {
 		checkIfThereWasSameVehicleInParkingLot(car.getPlate());
@@ -62,7 +59,7 @@ public class CarServiceBusiness implements CarService {
 	}
 	
 	private boolean isAbleDayToPlateStartWithA() {
-		switch (happyParkingTime.getDay()) {
+		switch (happyParkingTime.geCurrentDay()) {
 		case "Sunday":
 			return true;
 		case "Monday":

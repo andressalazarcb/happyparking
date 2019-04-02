@@ -35,9 +35,6 @@ public class MotorcycleControllerJersey implements MotorcycleController {
 	}
 	
 
-	public MotorcycleControllerJersey() {
-	}
-
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)

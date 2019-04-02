@@ -50,7 +50,7 @@ public class CarControllerGitInTest {
 		carEntity.setPlate(plate);
 		carEntity.setParking(true);
 
-		when(happyParkingTime.getDay()).thenReturn("Sunday");
+		when(happyParkingTime.geCurrentDay()).thenReturn("Sunday");
 		when(carRepository.save(any(Car.class))).thenReturn(carEntity);
 
 		// Act
@@ -80,7 +80,7 @@ public class CarControllerGitInTest {
 		carEntity.setParking(true);
 
 		when(carRepository.save(any(Car.class))).thenReturn(carEntity);
-		when(happyParkingTime.getDay()).thenReturn("Sunday");
+		when(happyParkingTime.geCurrentDay()).thenReturn("Sunday");
 
 		// Act
 		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request,
@@ -109,7 +109,7 @@ public class CarControllerGitInTest {
 		carEntity.setParking(true);
 
 		when(carRepository.save(any(Car.class))).thenReturn(carEntity);
-		when(happyParkingTime.getDay()).thenReturn("Wednesday");
+		when(happyParkingTime.geCurrentDay()).thenReturn("Wednesday");
 
 		// Act
 		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request, HappyParkingResponse.class);
@@ -136,7 +136,7 @@ public class CarControllerGitInTest {
 		carEntity.setParking(true);
 
 		when(carRepository.save(any(Car.class))).thenReturn(carEntity);
-		when(happyParkingTime.getDay()).thenReturn("Monday");
+		when(happyParkingTime.geCurrentDay()).thenReturn("Monday");
 
 		// Act
 		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request,
