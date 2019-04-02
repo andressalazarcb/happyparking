@@ -32,6 +32,7 @@ public class CarServiceBusiness implements CarService {
 		carToSave.setParking(true);
 		carToSave.setType("Carro");
 		ParkingOrder parkingOrder = new ParkingOrder();
+		parkingOrder.setParkingOrderId(carToSave.getPlate()+"_"+System.currentTimeMillis());
 		parkingOrder.setActive(true);
 		parkingOrder.setStartDate(System.currentTimeMillis());
 		carToSave.setParkingOrders(Arrays.asList(parkingOrder));

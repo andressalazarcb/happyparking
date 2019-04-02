@@ -18,4 +18,7 @@ public interface MotorcycleRepositoryMongo extends CrudRepository<Motorcycle, St
 	@Query(value = "{'isParking' : true}")
 	Stream<Motorcycle> findAllMotorcyclesByIsParkingTrueAndStream();
 
+	@Query("{'plate': ?0, 'isParking' : true}")
+	Motorcycle findByPlateAndParkingActive(String plate);
+
 }

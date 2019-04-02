@@ -10,4 +10,10 @@ public interface MotorcycleService {
 	
 	Stream<Motorcycle> findAllMotorcyclesParking();
 
+	Motorcycle getOutVehicle(String plate);
+
+	public long calculateDays(long totalHours);
+
+	public long calculateHours(long totalHours);
+
 }

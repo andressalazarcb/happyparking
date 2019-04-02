@@ -8,5 +8,6 @@ public interface MotorcycleController {
 	
 	public Response getIn(Motorcycle motorcycle);
 	public Response findAllVehiclesParking();
+	public Response getOut(Motorcycle motorcycle);
 
 }

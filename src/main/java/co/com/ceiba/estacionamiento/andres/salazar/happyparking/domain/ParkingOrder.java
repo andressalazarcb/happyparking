@@ -2,8 +2,14 @@ package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain;
 
 import java.math.BigDecimal;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 public class ParkingOrder {
 
+	@Id
+	private String parkingOrderId;
 	private Long startDate;
 	private Long endDate;
 	private boolean active;
@@ -39,6 +45,14 @@ public class ParkingOrder {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public String getParkingOrderId() {
+		return parkingOrderId;
+	}
+
+	public void setParkingOrderId(String parkingOrderId) {
+		this.parkingOrderId = parkingOrderId;
 	}
 
 }
