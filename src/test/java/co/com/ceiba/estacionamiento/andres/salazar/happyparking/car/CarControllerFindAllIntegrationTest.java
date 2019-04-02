@@ -1,11 +1,11 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking.motorcycle;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.car;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
+
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,34 +16,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Car;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingResponse;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Motorcycle;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class MotorcycleControllerFindAllIntegrationTest {
+public class CarControllerFindAllIntegrationTest {
 	
 	@Autowired
     private TestRestTemplate restTemplate;
 	
 	@Autowired
-	private MotorcycleService motorcycleService;
+	private CarService carService;
 	
 	@Autowired
-	private MotorcycleRepositoryMongo motorcycleRepository;
-
-	@Before
-	public void setUp() throws Exception {
-		motorcycleRepository.deleteAll();
-	}
+	private CarRepositoryMongo carRepository;
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown(){
+		carRepository.deleteAll();
 	}
 
 	@Test
 	public void testFindAllVehiclesParkingEmpty() {
-		String url = "/parkinglot/motorcycles/";
+		String url = "/parkinglot/cars/";
 		
 		ResponseEntity<HappyParkingResponse> entity = restTemplate.getForEntity(url, HappyParkingResponse.class);
 		
@@ -54,7 +50,7 @@ public class MotorcycleControllerFindAllIntegrationTest {
 	@Test
 	public void testFindAllVehiclesParking() {
 		setupDatabase(2);
-		String url = "/parkinglot/motorcycles/";
+		String url = "/parkinglot/cars/";
 		
 		ResponseEntity<HappyParkingResponse> entity = restTemplate.getForEntity(url, HappyParkingResponse.class);
 		
@@ -63,7 +59,7 @@ public class MotorcycleControllerFindAllIntegrationTest {
         List<?> list = (List<?>) entity.getBody().getContent();
         for (Object object : list) {
 			assertThat(object).extracting("plate").isNotEmpty();
-			assertThat(object).extracting("type").contains("Moto");
+			assertThat(object).extracting("type").contains("Carro");
 			assertThat(object).extracting("parking").isNotEmpty();
 			assertThat(object).extracting("parkingOrders").isNotEmpty();
 		}
@@ -71,14 +67,14 @@ public class MotorcycleControllerFindAllIntegrationTest {
 	
 	private void setupDatabase(int size) {
 		for (int i = 0; i < size; i++) {
-			setupDatabase("DFH1"+i);
+			setupDatabase("DFG1"+i);
 		}
 	}
 	
 	private void setupDatabase(String plate) {
-		Motorcycle motorcycle = new Motorcycle();
-		motorcycle.setPlate(plate);
-		motorcycleService.save(motorcycle);
+		Car car = new Car();
+		car.setPlate(plate);
+		carService.save(car);
 	}
 
 }

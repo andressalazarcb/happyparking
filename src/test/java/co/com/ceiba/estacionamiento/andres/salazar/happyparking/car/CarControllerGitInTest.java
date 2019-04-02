@@ -6,8 +6,6 @@ import static org.mockito.Mockito.*;
 
 import javax.ws.rs.core.Response.Status;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +35,6 @@ public class CarControllerGitInTest {
 
 	@MockBean
 	private HappyParkingTime happyParkingTime;
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	@Test
 	public void testGetIn() {

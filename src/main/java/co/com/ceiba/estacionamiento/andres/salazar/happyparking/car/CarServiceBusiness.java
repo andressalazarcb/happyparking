@@ -74,8 +74,7 @@ public class CarServiceBusiness implements CarService {
 
 	@Override
 	public Stream<Car> findAllCarsParking() {
-		Stream<Car> stream = carRepository.findAllCarsByIsParkingTrueAndStream();
-		return stream;
+		return carRepository.findAllCarsByIsParkingTrueAndStream();
 	}
 
 }
