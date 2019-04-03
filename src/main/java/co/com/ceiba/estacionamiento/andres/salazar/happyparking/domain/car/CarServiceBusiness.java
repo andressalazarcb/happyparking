@@ -1,0 +1,103 @@
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.ListIterator;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingException;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Settlement;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VerifyGetIn;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrderFactory;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.repository.CarRepositoryMongo;
+
+@Service
+public class CarServiceBusiness implements CarService {
+
+	private CarRepositoryMongo carRepository;
+
+	private Settlement<Car> carSettlement;
+	
+	private CarFactory carFactory;
+	
+	private ParkingOrderFactory parkingOrderFactory;
+	
+	private VerifyGetIn<Car> verifyGetIn;
+
+	@Autowired
+	public CarServiceBusiness(CarRepositoryMongo carRepository, Settlement<Car> carSettlement, CarFactory carFactory,
+			ParkingOrderFactory parkingOrderFactory, VerifyGetIn<Car> verifyGetIn) {
+		this.carRepository = carRepository;
+		this.carSettlement = carSettlement;
+		this.carFactory = carFactory;
+		this.parkingOrderFactory = parkingOrderFactory;
+		this.verifyGetIn = verifyGetIn;
+	}
+
+
+	@Override
+	public Car getOutVehicle(String plate) {
+		Car carFound = carRepository.findByPlateAndParkingActive(plate);
+		if(carFound == null) {
+			throw new HappyParkingException("No esta el vehiculo en el parqueadero");
+		}
+		ListIterator<ParkingOrder> parkingOrders = carFound.getParkingOrders().listIterator();
+		while (parkingOrders.hasNext()) {
+			ParkingOrder parkingOrder = parkingOrders.next();
+			if(parkingOrder.isActive() && parkingOrder.getEndDate() == null) {
+				parkingOrder.setEndDate(System.currentTimeMillis());
+				parkingOrder.setPrice(carSettlement.calculate(carFound, parkingOrder));
+				if(parkingOrder.getPrice().equals(BigDecimal.ZERO))
+					parkingOrder.setActive(false);
+				carFound.setParking(false);
+			}
+		}
+		
+		return carRepository.save(carFound);
+	}
+
+	@Override
+	public Stream<Car> findAllVehiclesParking() {
+		if (carRepository.findCountCarsByIsParking(true) > 0) {
+			return carRepository.findAllCarsByIsParkingTrueAndStream();
+		}
+		return null;
+	}
+	
+	@Override
+	public Car getInVehicle(Car vehicle) throws Exception {
+		Car currentCar = null;
+		verifyGetIn(vehicle);
+		Optional<Car> optional = carRepository.findById(vehicle.getPlate());
+		
+		if(optional.isPresent())
+			currentCar = optional.get();
+		
+		if(currentCar != null) {
+			currentCar.setParking(true);
+			ParkingOrder parkingOrder = parkingOrderFactory.getObject();
+			parkingOrder.createParkingOrderId(vehicle.getPlate());
+			currentCar.getParkingOrders().add(parkingOrder);
+		}else {
+			currentCar = carFactory.getObject();
+			currentCar.setPlate(vehicle.getPlate());
+			ParkingOrder parkingOrder = parkingOrderFactory.getObject();
+			parkingOrder.createParkingOrderId(currentCar.getPlate());
+			currentCar.setParkingOrders(Arrays.asList(parkingOrder));
+		}
+		
+		return carRepository.save(currentCar);
+	}
+	
+	private void verifyGetIn(Car car) {
+		HappyParkingException exception = verifyGetIn.check(car);
+		if(exception != null)
+			throw exception;
+	}
+
+}

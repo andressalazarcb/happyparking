@@ -1,44 +1,48 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking.car;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.integration.copy;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
+import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.Car;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.Motorcycle;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.MotorcycleService;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.jersey.HappyParkingResponse;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.repository.CarRepositoryMongo;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.repository.MotorcycleRepositoryMongo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class CarControllerFindAllTest {
-
-	@Autowired
-	private TestRestTemplate restTemplate;
+public class MotorcycleControllerFindAllIntegrationTest {
 	
-	@MockBean
-	private CarRepositoryMongo carRepository;
+	@Autowired
+    private TestRestTemplate restTemplate;
+	
+	@Autowired
+	private MotorcycleService motorcycleService;
+	
+	@Autowired
+	private MotorcycleRepositoryMongo motorcycleRepository;
+
+	@After
+	public void tearDown(){
+		motorcycleRepository.deleteAll();
+	}
 
 	@Test
+	@Ignore
 	public void testFindAllVehiclesParkingEmpty() {
-		String url = "/parkinglot/cars/";
-		when(carRepository.findCountCarsByIsParking(true)).thenReturn(0L);
-		when(carRepository.findAllCarsByIsParkingTrueAndStream()).thenReturn(null);
+		String url = "/parkinglot/motorcycles/";
 		
 		ResponseEntity<HappyParkingResponse> entity = restTemplate.getForEntity(url, HappyParkingResponse.class);
 		
@@ -47,11 +51,9 @@ public class CarControllerFindAllTest {
 	}
 	
 	@Test
-	public void testFindAllVehiclesParking() {
-		String url = "/parkinglot/cars/";
-		long size = 2L;
-		when(carRepository.findCountCarsByIsParking(true)).thenReturn(size);
-		when(carRepository.findAllCarsByIsParkingTrueAndStream()).thenReturn(setupDatabase(size));
+	public void testFindAllVehiclesParking() throws Exception {
+		setupDatabase(2);
+		String url = "/parkinglot/motorcycles/";
 		
 		ResponseEntity<HappyParkingResponse> entity = restTemplate.getForEntity(url, HappyParkingResponse.class);
 		
@@ -60,25 +62,22 @@ public class CarControllerFindAllTest {
         List<?> list = (List<?>) entity.getBody().getContent();
         for (Object object : list) {
 			assertThat(object).extracting("plate").isNotEmpty();
-			assertThat(object).extracting("type").contains("Carro");
+			assertThat(object).extracting("type").contains("Moto");
 			assertThat(object).extracting("parking").isNotEmpty();
 			assertThat(object).extracting("parkingOrders").isNotEmpty();
 		}
 	}
 	
-	private Stream<Car> setupDatabase(long size) {
-		List<Car> cars = new ArrayList<>();
+	private void setupDatabase(int size) throws Exception {
 		for (int i = 0; i < size; i++) {
-			Car carToSave = new Car();
-			carToSave.setParking(true);
-			carToSave.setType("Carro");
-			ParkingOrder parkingOrder = new ParkingOrder();
-			parkingOrder.setActive(true);
-			parkingOrder.setStartDate(System.currentTimeMillis());
-			carToSave.setParkingOrders(Arrays.asList(parkingOrder));
-			cars.add(carToSave);
+			setupDatabase("DFH1"+i);
 		}
-		return cars.stream();
+	}
+	
+	private void setupDatabase(String plate) throws Exception {
+		Motorcycle motorcycle = new Motorcycle();
+		motorcycle.setPlate(plate);
+		motorcycleService.getInVehicle(motorcycle);
 	}
 
 }

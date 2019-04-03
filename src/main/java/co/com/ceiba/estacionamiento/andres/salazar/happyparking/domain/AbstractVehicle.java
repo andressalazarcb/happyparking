@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
+
 public abstract class AbstractVehicle {
 
 	@Id

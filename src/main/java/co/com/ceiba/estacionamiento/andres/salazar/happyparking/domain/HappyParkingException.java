@@ -1,0 +1,25 @@
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain;
+
+import javax.ws.rs.ext.Provider;
+
+@Provider
+public class HappyParkingException extends RuntimeException {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1232007252240090307L;
+	
+	public HappyParkingException() {
+	}
+	
+	public HappyParkingException(String arg0) {
+		super(arg0);
+	}
+
+	public HappyParkingException(Exception e) {
+		super(e);
+	}
+
+
+}
