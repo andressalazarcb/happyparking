@@ -1,12 +1,15 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.car;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.ListIterator;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.HappyParkingException;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.car.settlement.CarSettlement;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Car;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.ParkingOrder;
 
@@ -17,12 +20,18 @@ public class CarServiceBusiness implements CarService {
 
 	private HappyParkingTime happyParkingTime;
 
+	private CarSettlement carSettlement;
+	
+
 	@Autowired
-	public CarServiceBusiness(CarRepositoryMongo carRepository, HappyParkingTime happyParkingTime) {
+	public CarServiceBusiness(CarRepositoryMongo carRepository, HappyParkingTime happyParkingTime,
+			CarSettlement carSettlement) {
 		this.carRepository = carRepository;
 		this.happyParkingTime = happyParkingTime;
+		this.carSettlement = carSettlement;
 	}
 
+	
 	@Override
 	public Car save(Car car) {
 		checkIfThereWasSameVehicleInParkingLot(car.getPlate());
@@ -73,6 +82,27 @@ public class CarServiceBusiness implements CarService {
 	@Override
 	public Stream<Car> findAllCarsParking() {
 		return carRepository.findAllCarsByIsParkingTrueAndStream();
+	}
+
+	@Override
+	public Car getOutVehicle(String plate) {
+		Car carFound = carRepository.findByPlateAndParkingActive(plate);
+		if(carFound == null) {
+			throw new HappyParkingException("No esta el vehiculo en el parqueadero");
+		}
+		ListIterator<ParkingOrder> parkingOrders = carFound.getParkingOrders().listIterator();
+		while (parkingOrders.hasNext()) {
+			ParkingOrder parkingOrder = (ParkingOrder) parkingOrders.next();
+			if(parkingOrder.isActive() && parkingOrder.getEndDate() == null) {
+				parkingOrder.setEndDate(System.currentTimeMillis());
+				parkingOrder.setPrice(carSettlement.calculate(carFound, parkingOrder));
+				if(parkingOrder.getPrice().equals(BigDecimal.ZERO))
+					parkingOrder.setActive(false);
+				carFound.setParking(false);
+			}
+		}
+		
+		return carRepository.save(carFound);
 	}
 
 }

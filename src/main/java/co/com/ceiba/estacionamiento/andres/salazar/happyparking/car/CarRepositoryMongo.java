@@ -18,4 +18,7 @@ public interface CarRepositoryMongo extends CrudRepository<Car, String> {
 	@Query(value = "{'isParking' : true}")
 	Stream<Car> findAllCarsByIsParkingTrueAndStream();
 
+	@Query("{'plate': ?0, 'isParking' : true}")
+	public Car findByPlateAndParkingActive(String plate);
+
 }

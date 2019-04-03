@@ -146,6 +146,39 @@ public class MotorcycleControllerGetOutIntegrationTest {
 		
 	}
 	
+	@Test
+	public void testGetOutImmediately() throws IOException {
+		// Arrange
+		setupDatabase(0L, "AAA123");
+				
+		String url = "/parkinglot/motorcycles/out";
+		String requestJson = "{\"plate\":\"AAA123\"}";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
+		
+
+		// Act
+		ResponseEntity<HappyParkingResponse> entity = restTemplate.exchange(url, HttpMethod.PUT, request, HappyParkingResponse.class);
+
+		// Assert
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
+		assertThat(entity.getBody().getStatus()).isEqualTo(Status.OK.getStatusCode());
+		ObjectMapper mapper = new ObjectMapper();
+		String motorcycleJson = mapper.writeValueAsString(entity.getBody().getContent());
+		Motorcycle motorcycle = mapper.readValue(motorcycleJson, Motorcycle.class);
+		assertThat(motorcycle).hasFieldOrPropertyWithValue("plate", "AAA123");
+		assertThat(motorcycle.getParkingOrders()).isNotEmpty();
+		List<ParkingOrder> parkingOrders = motorcycle.getParkingOrders();
+		for (ParkingOrder parkingOrder : parkingOrders) {
+			if(parkingOrder.isActive()) {
+				assertThat(parkingOrder).hasFieldOrPropertyWithValue("price", BigDecimal.ZERO);
+			}
+		}
+		
+	}
+	
 	private void setupDatabase(long hoursBefore, String plate) {
 		motorcycleRepository.save(getMotorcycle(hoursBefore, plate));
 	}

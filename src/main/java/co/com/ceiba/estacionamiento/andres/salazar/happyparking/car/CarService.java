@@ -10,4 +10,6 @@ public interface CarService {
 	
 	public Stream<Car> findAllCarsParking();
 
+	public Car getOutVehicle(String plate);
+
 }

@@ -12,8 +12,4 @@ public interface MotorcycleService {
 
 	Motorcycle getOutVehicle(String plate);
 
-	public long calculateDays(long totalHours);
-
-	public long calculateHours(long totalHours);
-
 }

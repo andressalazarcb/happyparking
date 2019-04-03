@@ -39,7 +39,8 @@ public class MotorcycleControllerJersey implements MotorcycleController {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getIn(Motorcycle motorcycle) {
+	public Response getIn(MotorcycleRequestJersey requestJersey) {
+		Motorcycle motorcycle = getMotorcycleFromMotorcycleRequestJersey(requestJersey);
 		Motorcycle motorcycleSaved = motorcycleService.save(motorcycle);
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
 		happyParkingResponse.setStatus(Status.CREATED.getStatusCode());
@@ -50,6 +51,7 @@ public class MotorcycleControllerJersey implements MotorcycleController {
 			      .type(MediaType.APPLICATION_JSON)
 			      .build();
 	}
+	
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -73,7 +75,8 @@ public class MotorcycleControllerJersey implements MotorcycleController {
 	@Path("out")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getOut(Motorcycle motorcycle) {
+	public Response getOut(MotorcycleRequestJersey requestJersey) {
+		Motorcycle motorcycle = getMotorcycleFromMotorcycleRequestJersey(requestJersey);
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
 		Motorcycle motorcycleOut = motorcycleService.getOutVehicle(motorcycle.getPlate());
 		happyParkingResponse.setContent(motorcycleOut);
@@ -82,6 +85,13 @@ public class MotorcycleControllerJersey implements MotorcycleController {
 			      .status(Status.OK)
 			      .entity(happyParkingResponse)
 			      .build();
+	}
+	
+	private Motorcycle getMotorcycleFromMotorcycleRequestJersey(MotorcycleRequestJersey requestJersey) {
+		Motorcycle motorcycle = new Motorcycle();
+		motorcycle.setCc(requestJersey.getCc());
+		motorcycle.setPlate(requestJersey.getPlate());
+		return motorcycle;
 	}
 
 }
