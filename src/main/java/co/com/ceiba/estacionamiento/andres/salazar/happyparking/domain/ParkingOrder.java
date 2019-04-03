@@ -69,7 +69,7 @@ public class ParkingOrder {
 		if(limitDayOne >= 1) {
 			long limitDayTwo = totalHours / 24l;
 			if(limitDayTwo >= 1) {
-				return (long) limitDayTwo;
+				return limitDayTwo;
 			}
 		}
 		return limitDayOne;

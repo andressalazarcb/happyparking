@@ -90,7 +90,7 @@ public class MotorcycleServiceBusiness implements MotorcycleService {
 		}
 		ListIterator<ParkingOrder> parkingOrders = motorcycleFound.getParkingOrders().listIterator();
 		while (parkingOrders.hasNext()) {
-			ParkingOrder parkingOrder = (ParkingOrder) parkingOrders.next();
+			ParkingOrder parkingOrder = parkingOrders.next();
 			if(parkingOrder.isActive() && parkingOrder.getEndDate() == null) {
 				parkingOrder.setEndDate(System.currentTimeMillis());
 				parkingOrder.setPrice(motorcycleSettlement.calculate(motorcycleFound, parkingOrder));

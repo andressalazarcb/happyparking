@@ -7,7 +7,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class UncaughtException extends Throwable implements ExceptionMapper<Throwable>{
+public class UncaughtThrowable extends Throwable implements ExceptionMapper<Throwable>{
 
 	/**
 	 * 

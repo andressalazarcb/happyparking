@@ -113,7 +113,7 @@ public class CarServiceBusiness implements CarService {
 		}
 		ListIterator<ParkingOrder> parkingOrders = carFound.getParkingOrders().listIterator();
 		while (parkingOrders.hasNext()) {
-			ParkingOrder parkingOrder = (ParkingOrder) parkingOrders.next();
+			ParkingOrder parkingOrder = parkingOrders.next();
 			if(parkingOrder.isActive() && parkingOrder.getEndDate() == null) {
 				parkingOrder.setEndDate(System.currentTimeMillis());
 				parkingOrder.setPrice(carSettlement.calculate(carFound, parkingOrder));
