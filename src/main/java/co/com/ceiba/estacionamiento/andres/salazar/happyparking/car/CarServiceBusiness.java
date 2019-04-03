@@ -3,15 +3,17 @@ package co.com.ceiba.estacionamiento.andres.salazar.happyparking.car;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.ListIterator;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.HappyParkingException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.car.settlement.CarSettlement;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Car;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.ParkingOrder;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VehicleType;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.jersey.HappyParkingException;
 
 @Service
 public class CarServiceBusiness implements CarService {
@@ -34,18 +36,37 @@ public class CarServiceBusiness implements CarService {
 	
 	@Override
 	public Car save(Car car) {
+		Car currentCar = null;
 		checkIfThereWasSameVehicleInParkingLot(car.getPlate());
 		checkIfThereAreSpaceToParking();
 		checkIfAbleToParkingDay(car.getPlate());
-		Car carToSave = car.copy();
-		carToSave.setParking(true);
-		carToSave.setType("Carro");
+		Optional<Car> optional = carRepository.findById(car.getPlate());
+		
+		if(optional.isPresent())
+			currentCar = optional.get();
+		
+		if(currentCar != null) {
+			currentCar.setParking(true);
+			ParkingOrder parkingOrder = getParkingOrder(currentCar.getPlate());
+			currentCar.getParkingOrders().add(parkingOrder);
+		}else {
+			currentCar = car.copy();
+			currentCar.setParking(true);
+			currentCar.setType(VehicleType.CAR.getValue());
+			ParkingOrder parkingOrder = getParkingOrder(currentCar.getPlate());
+			currentCar.setParkingOrders(Arrays.asList(parkingOrder));
+		}
+		
+		return carRepository.save(currentCar);
+	}
+	
+	private ParkingOrder getParkingOrder(String plate) {
 		ParkingOrder parkingOrder = new ParkingOrder();
-		parkingOrder.setParkingOrderId(carToSave.getPlate()+"_"+System.currentTimeMillis());
+		parkingOrder.setParkingOrderId(plate+"_"+System.currentTimeMillis());
 		parkingOrder.setActive(true);
 		parkingOrder.setStartDate(System.currentTimeMillis());
-		carToSave.setParkingOrders(Arrays.asList(parkingOrder));
-		return carRepository.save(carToSave);
+		return parkingOrder;
+		
 	}
 
 	private void checkIfThereWasSameVehicleInParkingLot(String plate) {

@@ -3,14 +3,16 @@ package co.com.ceiba.estacionamiento.andres.salazar.happyparking.motorcycle;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.ListIterator;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.HappyParkingException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Motorcycle;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.ParkingOrder;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VehicleType;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.jersey.HappyParkingException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.motorcycle.settlement.MotorcycleSettlement;
 
 @Service
@@ -28,17 +30,37 @@ public class MotorcycleServiceBusiness implements MotorcycleService {
 	}
 
 	public Motorcycle save(Motorcycle motorcycle) {
+		Motorcycle currentMotorcycle = null;
 		checkIfThereWasSameVehicleInParkingLot(motorcycle.getPlate());
 		checkIfThereAreSpaceToParking();
-		Motorcycle motorcycleToSave = motorcycle.copy();
-		motorcycleToSave.setParking(true);
-		motorcycleToSave.setType("Moto");
+		
+		Optional<Motorcycle> optional = motorcycleRepository.findById(motorcycle.getPlate());
+		
+		if(optional.isPresent())
+			currentMotorcycle = optional.get();
+		
+		if(currentMotorcycle != null) {
+			currentMotorcycle.setParking(true);
+			ParkingOrder parkingOrder = getParkingOrder(currentMotorcycle.getPlate());
+			currentMotorcycle.getParkingOrders().add(parkingOrder);
+		}else {
+			currentMotorcycle = motorcycle.copy();
+			currentMotorcycle.setParking(true);
+			currentMotorcycle.setType(VehicleType.MOTORCYCLE.getValue());
+			ParkingOrder parkingOrder = getParkingOrder(currentMotorcycle.getPlate());
+			currentMotorcycle.setParkingOrders(Arrays.asList(parkingOrder));
+		}
+		
+		return motorcycleRepository.save(currentMotorcycle);
+	}
+	
+	private ParkingOrder getParkingOrder(String plate) {
 		ParkingOrder parkingOrder = new ParkingOrder();
-		parkingOrder.setParkingOrderId(motorcycleToSave.getPlate()+"_"+System.currentTimeMillis());
+		parkingOrder.setParkingOrderId(plate+"_"+System.currentTimeMillis());
 		parkingOrder.setActive(true);
 		parkingOrder.setStartDate(System.currentTimeMillis());
-		motorcycleToSave.setParkingOrders(Arrays.asList(parkingOrder));
-		return motorcycleRepository.save(motorcycleToSave);
+		return parkingOrder;
+		
 	}
 	
 	private void checkIfThereWasSameVehicleInParkingLot(String plate) {

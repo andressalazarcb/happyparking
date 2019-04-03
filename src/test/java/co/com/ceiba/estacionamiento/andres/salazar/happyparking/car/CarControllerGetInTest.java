@@ -4,6 +4,10 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import javax.ws.rs.core.Response.Status;
 
 import org.junit.Test;
@@ -21,11 +25,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Car;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingResponse;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.ParkingOrder;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.jersey.HappyParkingResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class CarControllerGitInTest {
+public class CarControllerGetInTest {
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -51,6 +56,39 @@ public class CarControllerGitInTest {
 		carEntity.setParking(true);
 
 		when(happyParkingTime.geCurrentDay()).thenReturn("Sunday");
+		when(carRepository.save(any(Car.class))).thenReturn(carEntity);
+
+		// Act
+		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request,
+				HappyParkingResponse.class);
+
+		// Assert
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
+		assertThat(entity.getBody().getStatus()).isEqualTo(Status.CREATED.getStatusCode());
+		assertThat(entity.getBody().getContent()).extracting("plate").contains("AAA123");
+		assertThat(entity.getBody().getContent()).extracting("parking").contains(true);
+	}
+	
+	@Test
+	public void testGetInAlreadyExistCar() {
+		// Arange
+		String plate = "AAA123";
+		String url = "/parkinglot/cars/";
+		String requestJson = "{\"plate\":\"AAA123\"}";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
+
+		Car carEntity = new Car();
+		carEntity.setPlate(plate);
+		carEntity.setParking(true);
+		List<ParkingOrder> parkingOrders = new ArrayList<>();
+		parkingOrders.add(new ParkingOrder());
+		carEntity.setParkingOrders(parkingOrders);
+
+		when(happyParkingTime.geCurrentDay()).thenReturn("Sunday");
+		when(carRepository.findById(anyString())).thenReturn(Optional.of(carEntity));
 		when(carRepository.save(any(Car.class))).thenReturn(carEntity);
 
 		// Act

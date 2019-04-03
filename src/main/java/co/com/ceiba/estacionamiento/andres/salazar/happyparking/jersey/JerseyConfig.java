@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.jersey;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;

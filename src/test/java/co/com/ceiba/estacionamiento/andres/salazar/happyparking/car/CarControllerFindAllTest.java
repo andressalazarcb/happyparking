@@ -20,8 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Car;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingResponse;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.ParkingOrder;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.jersey.HappyParkingResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)

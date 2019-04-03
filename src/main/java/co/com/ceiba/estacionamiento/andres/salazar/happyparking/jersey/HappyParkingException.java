@@ -1,12 +1,10 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.jersey;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingResponse;
 
 @Provider
 public class HappyParkingException extends RuntimeException implements ExceptionMapper<HappyParkingException> {

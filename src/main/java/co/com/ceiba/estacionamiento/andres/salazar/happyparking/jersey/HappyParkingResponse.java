@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.jersey;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

@@ -14,8 +14,8 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingResponse;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Motorcycle;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.jersey.HappyParkingResponse;
 
 @Controller
 @Path("/parkinglot/motorcycles")
