@@ -4,6 +4,8 @@ plugins {
 }
 
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
+
 
 group = 'co.com.ceiba.estacionamiento.andres.salazar'
 version = '0.0.1-SNAPSHOT'
@@ -20,3 +22,12 @@ dependencies {
 	testCompile group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: '2.2.0'
 	
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+check.dependsOn jacocoTestReport
