@@ -25,17 +25,16 @@ public class Motorcycle extends AbstractVehicle{
 	}
 	
 	public Motorcycle copy(Motorcycle that) {
-		Motorcycle motorcycleCopy = new Motorcycle();
-		motorcycleCopy.setParking(that.isParking());
-		motorcycleCopy.setPlate(that.getPlate());
-		motorcycleCopy.setType(that.getType());
-		motorcycleCopy.setCc(that.getCc());
+		this.setParking(that.isParking());
+		this.setPlate(that.getPlate());
+		this.setType(that.getType());
+		this.setCc(that.getCc());
 		if(that.getParkingOrders() != null && !that.getParkingOrders().isEmpty()) {
 			List<ParkingOrder> parkingOrders = new ArrayList<>();
 			Collections.copy(parkingOrders, that.getParkingOrders());
-			motorcycleCopy.setParkingOrders(parkingOrders);
+			this.setParkingOrders(parkingOrders);
 		}
-		return motorcycleCopy;
+		return this;
 	}
 	
 

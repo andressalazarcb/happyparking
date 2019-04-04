@@ -13,16 +13,15 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingor
 public class Car extends AbstractVehicle{
 
 	public Car copy(Car that) {
-		Car carCopy = new Car();
-		carCopy.setParking(that.isParking());
-		carCopy.setPlate(that.getPlate());
-		carCopy.setType(that.getType());
+		this.setParking(that.isParking());
+		this.setPlate(that.getPlate());
+		this.setType(that.getType());
 		if(that.getParkingOrders() != null && !that.getParkingOrders().isEmpty()) {
 			List<ParkingOrder> parkingOrders = new ArrayList<>();
 			Collections.copy(parkingOrders, that.getParkingOrders());
-			carCopy.setParkingOrders(parkingOrders);
+			this.setParkingOrders(parkingOrders);
 		}
-		return carCopy;
+		return this;
 	}
 
 }
