@@ -1,11 +1,10 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.integration;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.ws.rs.core.Response.Status;
 
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,14 +58,10 @@ public class MotorcycleControllerGetInIntegrationTest {
 	@Test
 	public void testGetInPlateEmpty() {
 		//Arrange
-		String url = "/parkinglot/motorcycles/";
 		String requestJson = "{\"plate\":\"\"}";
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
 		
 		//Act
-		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, getRequest(requestJson), HappyParkingResponse.class);
 		
 		//Assert
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -147,8 +142,7 @@ public class MotorcycleControllerGetInIntegrationTest {
 	private HttpEntity<String> getRequest(String json){
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> request = new HttpEntity<>(json, headers);
-		return request;
+		return new HttpEntity<>(json, headers);
 	}
 
 }

@@ -24,7 +24,7 @@ public class Motorcycle extends AbstractVehicle{
 		this.cc = cc;
 	}
 	
-	public Motorcycle copy(Motorcycle that) {
+	public void copy(Motorcycle that) {
 		this.setParking(that.isParking());
 		this.setPlate(that.getPlate());
 		this.setType(that.getType());
@@ -34,7 +34,6 @@ public class Motorcycle extends AbstractVehicle{
 			Collections.copy(parkingOrders, that.getParkingOrders());
 			this.setParkingOrders(parkingOrders);
 		}
-		return this;
 	}
 	
 

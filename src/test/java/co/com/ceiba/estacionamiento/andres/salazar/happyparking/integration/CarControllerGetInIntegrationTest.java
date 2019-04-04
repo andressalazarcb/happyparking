@@ -1,11 +1,10 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.integration;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.ws.rs.core.Response.Status;
 
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,8 +128,7 @@ public class CarControllerGetInIntegrationTest {
 	private HttpEntity<String> getRequest(String json){
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> request = new HttpEntity<>(json, headers);
-		return request;
+		return new HttpEntity<>(json, headers);
 	}
 	
 }
