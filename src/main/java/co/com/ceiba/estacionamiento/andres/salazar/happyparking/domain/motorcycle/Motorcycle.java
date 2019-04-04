@@ -8,10 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.AbstractVehicle;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
-import lombok.Builder;
 
 @Document
-@Builder(toBuilder = true)
 public class Motorcycle extends AbstractVehicle{
 	
 	private int cc;
