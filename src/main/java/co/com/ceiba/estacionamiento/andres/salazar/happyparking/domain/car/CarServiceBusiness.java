@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingException;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingSystemException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Settlement;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VerifyGetIn;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
@@ -70,28 +71,31 @@ public class CarServiceBusiness implements CarService {
 	}
 	
 	@Override
-	public Car getInVehicle(Car vehicle) throws Exception {
-		Car currentCar = null;
+	public Car getInVehicle(Car vehicle){
 		verifyGetIn(vehicle);
-		Optional<Car> optional = carRepository.findById(vehicle.getPlate());
-		
-		if(optional.isPresent())
-			currentCar = optional.get();
-		
-		if(currentCar != null) {
-			currentCar.setParking(true);
-			ParkingOrder parkingOrder = parkingOrderFactory.getObject();
-			parkingOrder.createParkingOrderId(vehicle.getPlate());
-			currentCar.getParkingOrders().add(parkingOrder);
-		}else {
-			currentCar = carFactory.getObject();
-			currentCar.setPlate(vehicle.getPlate());
-			ParkingOrder parkingOrder = parkingOrderFactory.getObject();
-			parkingOrder.createParkingOrderId(currentCar.getPlate());
-			currentCar.setParkingOrders(Arrays.asList(parkingOrder));
+		try {
+			Car currentCar = null;
+			Optional<Car> optional = carRepository.findById(vehicle.getPlate());
+			
+			if(optional.isPresent())
+				currentCar = optional.get();
+			
+			if(currentCar != null) {
+				currentCar.setParking(true);
+				ParkingOrder parkingOrder = parkingOrderFactory.getObject();
+				parkingOrder.createParkingOrderId(vehicle.getPlate());
+				currentCar.getParkingOrders().add(parkingOrder);
+			}else {
+				currentCar = carFactory.getObject();
+				currentCar.setPlate(vehicle.getPlate());
+				ParkingOrder parkingOrder = parkingOrderFactory.getObject();
+				parkingOrder.createParkingOrderId(currentCar.getPlate());
+				currentCar.setParkingOrders(Arrays.asList(parkingOrder));
+			}
+			return carRepository.save(currentCar);
+		} catch (Exception e) {
+			throw new HappyParkingSystemException(e);
 		}
-		
-		return carRepository.save(currentCar);
 	}
 	
 	private void verifyGetIn(Car car) {

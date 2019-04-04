@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingException;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingSystemException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Settlement;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VehicleType;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VerifyGetIn;
@@ -71,31 +72,36 @@ public class MotorcycleServiceBusiness implements MotorcycleService {
 	}
 	
 	@Override
-	public Motorcycle getInVehicle(Motorcycle vehicle) throws Exception {
-		Motorcycle currentMotorcycle = null;
+	public Motorcycle getInVehicle(Motorcycle vehicle){
 		verifyGetIn(vehicle);
-		Optional<Motorcycle> optional = motorcycleRepository.findById(vehicle.getPlate());
-		
-		if(optional.isPresent())
-			currentMotorcycle = optional.get();
-		
-		if(currentMotorcycle != null) {
-			currentMotorcycle.setParking(true);
-			ParkingOrder parkingOrder = parkingOrderFactory.getObject();
-			parkingOrder.createParkingOrderId(vehicle.getPlate());
-			currentMotorcycle.getParkingOrders().add(parkingOrder);
-		}else {
-			currentMotorcycle = motorcycleFactory.getObject();
-			currentMotorcycle.copy(vehicle);
-			currentMotorcycle.setPlate(vehicle.getPlate());
-			currentMotorcycle.setParking(true);
-			currentMotorcycle.setType(VehicleType.MOTORCYCLE.getValue());
-			ParkingOrder parkingOrder = parkingOrderFactory.getObject();
-			parkingOrder.createParkingOrderId(vehicle.getPlate());
-			currentMotorcycle.setParkingOrders(Arrays.asList(parkingOrder));
+		try {
+			Motorcycle currentMotorcycle = null;
+			
+			Optional<Motorcycle> optional = motorcycleRepository.findById(vehicle.getPlate());
+			
+			if(optional.isPresent())
+				currentMotorcycle = optional.get();
+			
+			if(currentMotorcycle != null) {
+				currentMotorcycle.setParking(true);
+				ParkingOrder parkingOrder = parkingOrderFactory.getObject();
+				parkingOrder.createParkingOrderId(vehicle.getPlate());
+				currentMotorcycle.getParkingOrders().add(parkingOrder);
+			}else {
+				currentMotorcycle = motorcycleFactory.getObject();
+				currentMotorcycle.copy(vehicle);
+				currentMotorcycle.setPlate(vehicle.getPlate());
+				currentMotorcycle.setParking(true);
+				currentMotorcycle.setType(VehicleType.MOTORCYCLE.getValue());
+				ParkingOrder parkingOrder = parkingOrderFactory.getObject();
+				parkingOrder.createParkingOrderId(vehicle.getPlate());
+				currentMotorcycle.setParkingOrders(Arrays.asList(parkingOrder));
+			}
+			return motorcycleRepository.save(currentMotorcycle);
+		} catch (Exception e) {
+			throw new HappyParkingSystemException(e);
 		}
 		
-		return motorcycleRepository.save(currentMotorcycle);
 	}
 	
 	private void verifyGetIn(Motorcycle motorcycle) {

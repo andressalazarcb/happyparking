@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 public interface ParkingService<T> {
 	
-	T getInVehicle(T vehicle) throws Exception;
+	T getInVehicle(T vehicle);
 	
 	Stream<T> findAllVehiclesParking();
 
