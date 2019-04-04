@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.integration.copy;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.integration;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -27,6 +27,8 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class MotorcycleControllerGetInIntegrationTest {
 	
+	private String url = "/parkinglot/motorcycles/";
+	
 	@Autowired
     private TestRestTemplate restTemplate;
 	
@@ -39,17 +41,12 @@ public class MotorcycleControllerGetInIntegrationTest {
 	}
 
 	@Test
-	@Ignore
 	public void testGetIn() {
 		//Arrange
-		String url = "/parkinglot/motorcycles/";
 		String requestJson = "{\"plate\":\"AAA123\"}";
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
 		
 		//Act
-		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, getRequest(requestJson), HappyParkingResponse.class);
 		
 		//Assert
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -81,7 +78,6 @@ public class MotorcycleControllerGetInIntegrationTest {
 	@Test
 	public void testGetInNullRequest() {
 		//Arrange
-		String url = "/parkinglot/motorcycles/";
 		String requestJson = null;
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -98,12 +94,10 @@ public class MotorcycleControllerGetInIntegrationTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testGetInThereAreNotSpaceToParking() {		
 		//Arrange
 		setupDatabase(10);
 		
-		String url = "/parkinglot/motorcycles/";
 		String requestJson = "{\"plate\":\"POA123\"}";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -121,19 +115,14 @@ public class MotorcycleControllerGetInIntegrationTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testGetInExistSameMotorcycleInParking() {		
 		//Arrange
-		setupDatabase("WAA123");
-		
-		String url = "/parkinglot/motorcycles/";
-		String requestJson = "{\"plate\":\"WAA123\"}";
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
+		String plate = "WAA123";
+		setupDatabase(plate);
+		String requestJson = "{\"plate\":\""+plate+"\"}";
 		
 		//Act
-		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, getRequest(requestJson), HappyParkingResponse.class);
 				
 		//Assert
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -153,6 +142,13 @@ public class MotorcycleControllerGetInIntegrationTest {
 		motorcycle.setPlate(plate);
 		motorcycle.setParking(true);
 		motorcycleRepository.save(motorcycle);
+	}
+	
+	private HttpEntity<String> getRequest(String json){
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> request = new HttpEntity<>(json, headers);
+		return request;
 	}
 
 }

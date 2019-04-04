@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.integration.copy;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -173,9 +173,7 @@ public class MotorcycleControllerGetOutIntegrationTest {
 		assertThat(motorcycle.getParkingOrders()).isNotEmpty();
 		List<ParkingOrder> parkingOrders = motorcycle.getParkingOrders();
 		for (ParkingOrder parkingOrder : parkingOrders) {
-			if(parkingOrder.isActive()) {
-				assertThat(parkingOrder).hasFieldOrPropertyWithValue("price", BigDecimal.ZERO);
-			}
+			assertThat(parkingOrder).hasFieldOrPropertyWithValue("price", BigDecimal.ZERO);
 		}
 		
 	}

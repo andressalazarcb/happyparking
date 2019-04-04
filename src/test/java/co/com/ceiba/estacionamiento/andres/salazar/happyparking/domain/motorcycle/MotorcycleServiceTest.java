@@ -130,6 +130,7 @@ public class MotorcycleServiceTest {
 				.build());
 		}
 		when(motorcycleRepository.findAllMotorcyclesByIsParkingTrueAndStream()).thenReturn(motorcycles.stream());
+		when(motorcycleRepository.findCountMotorcycleByIsParking(true)).thenReturn(5l);
 		
 		Stream<Motorcycle> stream = motorcycleService.findAllVehiclesParking();
 		

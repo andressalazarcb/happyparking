@@ -1,8 +1,5 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain;
 
-import javax.ws.rs.ext.Provider;
-
-@Provider
 public class HappyParkingException extends RuntimeException {
 	
 	/**

@@ -64,7 +64,10 @@ public class MotorcycleServiceBusiness implements MotorcycleService {
 
 	@Override
 	public Stream<Motorcycle> findAllVehiclesParking() {
-		return motorcycleRepository.findAllMotorcyclesByIsParkingTrueAndStream();
+		if (motorcycleRepository.findCountMotorcycleByIsParking(true) > 0) {
+			return motorcycleRepository.findAllMotorcyclesByIsParkingTrueAndStream();
+		}
+		return null;
 	}
 	
 	@Override
@@ -84,6 +87,7 @@ public class MotorcycleServiceBusiness implements MotorcycleService {
 		}else {
 			currentMotorcycle = motorcycleFactory.getObject();
 			currentMotorcycle.copy(vehicle);
+			currentMotorcycle.setPlate(vehicle.getPlate());
 			currentMotorcycle.setParking(true);
 			currentMotorcycle.setType(VehicleType.MOTORCYCLE.getValue());
 			ParkingOrder parkingOrder = parkingOrderFactory.getObject();

@@ -17,7 +17,7 @@ public class CalculateSettlementCarHour implements CalculateSettlement<Car>{
 	}
 	
 	private BigDecimal getPriceToPayHours(long hours) {
-		return BigDecimal.valueOf(500L).multiply(BigDecimal.valueOf(hours));
+		return BigDecimal.valueOf(1000L).multiply(BigDecimal.valueOf(hours));
 	}
 
 }
