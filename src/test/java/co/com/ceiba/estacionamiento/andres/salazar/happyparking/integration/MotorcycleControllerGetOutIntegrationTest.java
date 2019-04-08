@@ -37,7 +37,7 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class MotorcycleControllerGetOutIntegrationTest {
 	
-	private String url = "/parkinglot/motorcycles/out";
+	private String url = "/parkinglot/motorcycles/";
 	private String plateField = "plate";
 	private String priceField = "price";
 

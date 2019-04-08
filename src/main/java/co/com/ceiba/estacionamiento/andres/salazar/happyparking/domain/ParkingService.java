@@ -9,5 +9,7 @@ public interface ParkingService<T> {
 	Stream<T> findAllVehiclesParking();
 
 	T getOutVehicle(String plate);
+	
+	T findVehicle(String plate);
 
 }

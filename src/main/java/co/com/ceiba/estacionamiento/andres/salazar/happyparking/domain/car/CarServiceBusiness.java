@@ -71,6 +71,15 @@ public class CarServiceBusiness implements CarService {
 	}
 	
 	@Override
+	public Car findVehicle(String plate) {
+		Optional<Car> optional = carRepository.findById(plate);
+		if(optional.isPresent()) {
+			return optional.get();
+		}
+		return null;
+	}
+	
+	@Override
 	public Car getInVehicle(Car vehicle){
 		verifyGetIn(vehicle);
 		try {

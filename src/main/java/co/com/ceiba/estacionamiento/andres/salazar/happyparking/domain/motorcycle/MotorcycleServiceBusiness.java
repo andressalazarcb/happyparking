@@ -109,6 +109,15 @@ public class MotorcycleServiceBusiness implements MotorcycleService {
 		if(exception != null)
 			throw exception;
 	}
+
+	@Override
+	public Motorcycle findVehicle(String plate) {
+		Optional<Motorcycle> optional = motorcycleRepository.findById(plate);
+		if(optional.isPresent()) {
+			return optional.get();
+		}
+		return null;
+	}
 	
 
 }

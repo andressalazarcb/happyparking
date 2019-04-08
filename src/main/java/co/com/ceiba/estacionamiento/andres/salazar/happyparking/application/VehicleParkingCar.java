@@ -36,7 +36,7 @@ public class VehicleParkingCar implements VehicleParking<Car>{
 	}
 
 	public Car findVehicleByPlate(String plate) {
-		return null;
+		return carService.findVehicle(plate);
 	}
 
 }

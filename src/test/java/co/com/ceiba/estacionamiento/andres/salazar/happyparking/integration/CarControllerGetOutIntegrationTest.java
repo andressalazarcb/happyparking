@@ -39,7 +39,7 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CarControllerGetOutIntegrationTest {
 	
-	private String url = "/parkinglot/cars/out";
+	private String url = "/parkinglot/cars/";
 
 	@Autowired
 	private TestRestTemplate restTemplate;
