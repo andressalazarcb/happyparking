@@ -17,7 +17,7 @@ public class RuleMotorcycleThereWasSameVehicle implements Rule<Motorcycle>{
 	public HappyParkingException excecute(Motorcycle vehicle) {
 		Motorcycle motorcycleFound = motorcycleRepository.findMotorcycleByPlateAndIsParking(vehicle.getPlate(), true);
 		if (motorcycleFound != null) {
-			return new HappyParkingException("hay una moto parqueada");
+			return new HappyParkingException("hay un vehiculo parqueado");
 		}
 		return null;
 	}

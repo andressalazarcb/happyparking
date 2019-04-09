@@ -3,9 +3,11 @@ package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
 
+@Document(collection = "vehicles")
 public abstract class AbstractVehicle {
 
 	@Id

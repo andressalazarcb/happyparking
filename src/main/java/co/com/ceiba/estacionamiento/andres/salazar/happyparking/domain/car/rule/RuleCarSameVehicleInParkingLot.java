@@ -17,7 +17,7 @@ public class RuleCarSameVehicleInParkingLot implements Rule<Car>{
 	public HappyParkingException excecute(Car vehicle) {
 		Car carFound = carRepository.findCarByPlateAndIsParking(vehicle.getPlate(), true);
 		if (carFound != null) {
-			return new HappyParkingException("hay un carro parqueado");
+			return new HappyParkingException("hay un vehiculo parqueado");
 		}
 		return null;
 	}

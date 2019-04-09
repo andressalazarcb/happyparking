@@ -124,7 +124,7 @@ public class CarControllerGetInIntegrationTest {
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
 		assertThat(entity.getBody().getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
-		assertThat(entity.getBody().getContent()).isEqualTo("hay un carro parqueado");	
+		assertThat(entity.getBody().getContent()).isEqualTo("hay un vehiculo parqueado");	
 	}
 	
 	@Test

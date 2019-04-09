@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.Motorcycle;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.MotorcycleTestBuilder;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.jersey.HappyParkingResponse;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.repository.MotorcycleRepositoryMongo;
 
@@ -123,7 +124,7 @@ public class MotorcycleControllerGetInIntegrationTest {
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
         assertThat(entity.getBody().getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
-        assertThat(entity.getBody().getContent()).isEqualTo("hay una moto parqueada");
+        assertThat(entity.getBody().getContent()).isEqualTo("hay un vehiculo parqueado");
 	}
 	
 	private void setupDatabase(int size) {
@@ -133,9 +134,10 @@ public class MotorcycleControllerGetInIntegrationTest {
 	}
 	
 	private void setupDatabase(String plate) {
-		Motorcycle motorcycle = new Motorcycle();
-		motorcycle.setPlate(plate);
-		motorcycle.setParking(true);
+		Motorcycle motorcycle = MotorcycleTestBuilder.create()
+				.withIsParking()
+				.withPlate(plate)
+				.build();
 		motorcycleRepository.save(motorcycle);
 	}
 	
