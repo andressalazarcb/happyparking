@@ -5,7 +5,6 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.Car;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.CarService;
 
@@ -20,11 +19,7 @@ public class VehicleParkingCar implements VehicleParking<Car>{
 	}
 
 	public Car getInVehicleToParkingLot(Car vehicle) {
-		try {
-			return carService.getInVehicle(vehicle);
-		} catch (Exception e) {
-			throw new HappyParkingException(e);
-		}
+		return carService.getInVehicle(vehicle);
 	}
 
 	public Car getOutVehicleOfParkingLot(String plate) {
