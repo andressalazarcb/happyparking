@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.AbstractVehicle;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
 
-@Document
+@Document(collection = "vehicles")
+@TypeAlias("motorcycle")
 public class Motorcycle extends AbstractVehicle{
 	
 	private int cc;

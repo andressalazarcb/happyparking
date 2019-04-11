@@ -207,4 +207,30 @@ public class MotorcycleServiceTest {
 		motorcycleService.getOutVehicle(motorcycle.getPlate());
 		
 	}
+	
+	@Test
+	public void testFindVehicle() throws Exception {
+		String plate = "JHG365";
+		Motorcycle moto = MotorcycleTestBuilder
+				.create()
+				.withPlate(plate)
+				.build();
+		
+		when(motorcycleRepository.findById(anyString())).thenReturn(Optional.of(moto));
+		
+		Motorcycle motorcycleSaved = motorcycleService.findVehicle(plate);
+		
+		assertThat(motorcycleSaved).isNotNull();
+	}
+	
+	@Test
+	public void testFindVehicleNotContent() throws Exception {
+		String plate = "JNG365";
+		
+		when(motorcycleRepository.findById(anyString())).thenReturn(Optional.empty());
+		
+		Motorcycle motorcycleSaved = motorcycleService.findVehicle(plate);
+		
+		assertThat(motorcycleSaved).isNull();
+	}
 }

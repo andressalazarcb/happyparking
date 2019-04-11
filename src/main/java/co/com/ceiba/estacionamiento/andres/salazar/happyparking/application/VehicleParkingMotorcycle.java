@@ -5,27 +5,21 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.Motorcycle;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.MotorcycleService;
 
 @Component
-public class VehicleParkingMotorcycle implements VehicleParking<Motorcycle>{
-	
+public class VehicleParkingMotorcycle implements VehicleParking<Motorcycle> {
+
 	private MotorcycleService motorcycleService;
-	
+
 	@Autowired
 	public VehicleParkingMotorcycle(MotorcycleService motorcycleService) {
 		this.motorcycleService = motorcycleService;
 	}
-	
 
 	public Motorcycle getInVehicleToParkingLot(Motorcycle vehicle) {
-		try {
-			return motorcycleService.getInVehicle(vehicle);
-		} catch (Exception e) {
-			throw new HappyParkingException(e);
-		}
+		return motorcycleService.getInVehicle(vehicle);
 	}
 
 	public Motorcycle getOutVehicleOfParkingLot(String plate) {
@@ -37,7 +31,7 @@ public class VehicleParkingMotorcycle implements VehicleParking<Motorcycle>{
 	}
 
 	public Motorcycle findVehicleByPlate(String plate) {
-		return null;
+		return motorcycleService.findVehicle(plate);
 	}
 
 }

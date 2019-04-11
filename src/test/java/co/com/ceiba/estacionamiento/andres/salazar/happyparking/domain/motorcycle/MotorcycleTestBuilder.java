@@ -3,12 +3,13 @@ package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcyc
 import java.util.ArrayList;
 import java.util.List;
 
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VehicleType;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
 
 public class MotorcycleTestBuilder {
 	
 	private String plate = "HGF478";
-	private String type;
+	private String type = VehicleType.MOTORCYCLE.getValue();
 	private List<ParkingOrder> parkingOrders;
 	private boolean isParking;
 	private int cc;

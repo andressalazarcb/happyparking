@@ -7,6 +7,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -67,7 +68,6 @@ public class CarControllerJersey {
 	}
 
 	@PUT
-	@Path("out")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getOut(CarRequestJersey requestJersey) {
@@ -80,6 +80,21 @@ public class CarControllerJersey {
 			      .status(Status.OK)
 			      .entity(happyParkingResponse)
 			      .build();
+	}
+	
+	@GET
+	@Path("{plate}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findVehicleByPlate(@PathParam("plate") String plate) {
+		Status status = Status.NO_CONTENT;
+		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
+		Car car = vehicleParking.findVehicleByPlate(plate);
+		if(car != null) {
+			status = Status.OK;
+			happyParkingResponse.setStatus(Status.OK.getStatusCode());
+			happyParkingResponse.setContent(car);
+		}
+		return Response.status(status).entity(happyParkingResponse).build();
 	}
 
 }

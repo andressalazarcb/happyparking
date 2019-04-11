@@ -211,5 +211,31 @@ public class CarServiceTest {
 		
 		assertThat(update).isNotNull();
 	}
+	
+	@Test
+	public void testFindVehicle() throws Exception {
+		String plate = "JHG365";
+		Car car = CarTestBuilder
+				.create()
+				.withPlate(plate)
+				.build();
+		
+		when(carRepository.findById(anyString())).thenReturn(Optional.of(car));
+		
+		Car carSaved = carService.findVehicle(plate);
+		
+		assertThat(carSaved).isNotNull();
+	}
+	
+	@Test
+	public void testFindVehicleNotContent() throws Exception {
+		String plate = "JNG365";
+		
+		when(carRepository.findById(anyString())).thenReturn(Optional.empty());
+		
+		Car carSaved = carService.findVehicle(plate);
+		
+		assertThat(carSaved).isNull();
+	}
 
 }
