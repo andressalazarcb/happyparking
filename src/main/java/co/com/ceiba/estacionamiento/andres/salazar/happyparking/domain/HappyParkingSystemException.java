@@ -1,6 +1,6 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain;
 
-public class HappyParkingSystemException extends RuntimeException{
+public class HappyParkingSystemException extends RuntimeException {
 
 	/**
 	 * 
@@ -13,6 +13,5 @@ public class HappyParkingSystemException extends RuntimeException{
 	public HappyParkingSystemException(Throwable arg0) {
 		super(arg0);
 	}
-	
-	
+
 }

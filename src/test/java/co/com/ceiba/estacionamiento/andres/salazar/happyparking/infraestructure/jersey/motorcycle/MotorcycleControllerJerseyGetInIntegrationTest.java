@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking.integration;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.jersey.motorcycle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,9 +25,11 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class MotorcycleControllerGetInIntegrationTest {
+public class MotorcycleControllerJerseyGetInIntegrationTest {
 	
 	private String url = "/parkinglot/motorcycles/";
+	private String plateField = "plate";
+	private String parkingField = "parking";
 	
 	@Autowired
     private TestRestTemplate restTemplate;
@@ -43,7 +45,8 @@ public class MotorcycleControllerGetInIntegrationTest {
 	@Test
 	public void testGetIn() {
 		//Arrange
-		String requestJson = "{\"plate\":\"AAA123\"}";
+		String plate = "AAA123";
+		String requestJson = getJson(plate);
 		
 		//Act
 		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, getRequest(requestJson), HappyParkingResponse.class);
@@ -52,14 +55,14 @@ public class MotorcycleControllerGetInIntegrationTest {
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
         assertThat(entity.getBody().getStatus()).isEqualTo(Status.CREATED.getStatusCode());
-        assertThat(entity.getBody().getContent()).extracting("plate").contains("AAA123");
-        assertThat(entity.getBody().getContent()).extracting("parking").contains(true);
+        assertThat(entity.getBody().getContent()).extracting(plateField).contains(plate);
+        assertThat(entity.getBody().getContent()).extracting(parkingField).contains(true);
 	}
 	
 	@Test
 	public void testGetInPlateEmpty() {
 		//Arrange
-		String requestJson = "{\"plate\":\"\"}";
+		String requestJson = getJson("");
 		
 		//Act
 		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, getRequest(requestJson), HappyParkingResponse.class);
@@ -68,45 +71,39 @@ public class MotorcycleControllerGetInIntegrationTest {
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
         assertThat(entity.getBody().getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
-        assertThat(entity.getBody().getContent()).isEqualTo("La placa es requerida");
+        assertThat(entity.getBody().getContent()).isEqualTo("The vehicle plate is required");
 	}
 	
 	@Test
 	public void testGetInNullRequest() {
 		//Arrange
 		String requestJson = null;
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
 		
 		//Act
-		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, getRequest(requestJson), HappyParkingResponse.class);
 		
 		//Assert
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
         assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
         assertThat(entity.getBody().getStatus()).isEqualTo(Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        assertThat(entity.getBody().getContent()).isEqualTo("ha ocurrido un error, pronto lo solucionaremos");
+        assertThat(entity.getBody().getContent()).isEqualTo("Something goes wrong, we are fixing soon as posible");
 	}
 	
 	@Test
 	public void testGetInThereAreNotSpaceToParking() {		
 		//Arrange
+		String plate = "POA123";
 		setupDatabase(10);
-		
-		String requestJson = "{\"plate\":\"POA123\"}";
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
+		String requestJson = getJson(plate);
 		
 		//Act
-		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, request, HappyParkingResponse.class);
+		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, getRequest(requestJson), HappyParkingResponse.class);
 		
 		//Assert
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
         assertThat(entity.getBody().getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
-        assertThat(entity.getBody().getContent()).isEqualTo("no hay espacio para motos");
+        assertThat(entity.getBody().getContent()).isEqualTo("There are not space for motorcycles");
 		
 	}
 	
@@ -115,7 +112,7 @@ public class MotorcycleControllerGetInIntegrationTest {
 		//Arrange
 		String plate = "WAA123";
 		setupDatabase(plate);
-		String requestJson = "{\"plate\":\""+plate+"\"}";
+		String requestJson = getJson(plate);
 		
 		//Act
 		ResponseEntity<HappyParkingResponse> entity = restTemplate.postForEntity(url, getRequest(requestJson), HappyParkingResponse.class);
@@ -124,7 +121,7 @@ public class MotorcycleControllerGetInIntegrationTest {
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
         assertThat(entity.getBody().getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
-        assertThat(entity.getBody().getContent()).isEqualTo("hay un vehiculo parqueado");
+        assertThat(entity.getBody().getContent()).isEqualTo("There is a vehicle already in parking lot");
 	}
 	
 	private void setupDatabase(int size) {
@@ -145,6 +142,10 @@ public class MotorcycleControllerGetInIntegrationTest {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		return new HttpEntity<>(json, headers);
+	}
+	
+	private String getJson(String plate) {
+		return "{\"plate\":\"" + plate + "\"}";
 	}
 
 }

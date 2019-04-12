@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VehicleType;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.Motorcycle;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.MotorcycleTestBuilder;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.jersey.HappyParkingResponse;
@@ -21,9 +22,13 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class MotorcycleControllerJerseyTest {
+public class MotorcycleControllerJerseyFindVehicleByPlateTest {
 
 	private String url = "/parkinglot/motorcycles/";
+	private String plateField = "plate";
+	private String typeField = "type";
+	private String parkingField = "parking";
+	private String parkingOrdersField = "parkingOrders";
 	
 	@Autowired
     private TestRestTemplate restTemplate;
@@ -55,10 +60,10 @@ public class MotorcycleControllerJerseyTest {
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
         Object object =  entity.getBody().getContent();
-        assertThat(object).extracting("plate").isNotEmpty();
-		assertThat(object).extracting("type").contains("Moto");
-		assertThat(object).extracting("parking").isNotEmpty();
-		assertThat(object).extracting("parkingOrders").isNotEmpty();
+        assertThat(object).extracting(plateField).isNotEmpty();
+		assertThat(object).extracting(typeField).contains(VehicleType.MOTORCYCLE.getValue());
+		assertThat(object).extracting(parkingField).isNotEmpty();
+		assertThat(object).extracting(parkingOrdersField).isNotEmpty();
 	}
 	
 	@Test

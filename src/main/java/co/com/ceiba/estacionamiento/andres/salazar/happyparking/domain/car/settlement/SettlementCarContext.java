@@ -12,7 +12,7 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.Car;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
 
 @Component
-public class SettlementCarContext implements Settlement<Car>{
+class SettlementCarContext implements Settlement<Car>{
 	
 	private List<CalculateSettlement<Car>> settlements;
 	

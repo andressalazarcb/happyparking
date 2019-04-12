@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking.integration;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.jersey.car;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VehicleType;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.Car;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.CarService;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.CarTestBuilder;
@@ -23,9 +24,13 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class CarControllerFindAllIntegrationTest {
+public class CarControllerJerseyFindAllIntegrationTest {
 	
 	private String url = "/parkinglot/cars/";
+	private String plateField = "plate";
+	private String typeField = "type";
+	private String parkingField = "parking";
+	private String parkingOrdersField = "parkingOrders";
 	
 	@Autowired
     private TestRestTemplate restTemplate;
@@ -50,7 +55,7 @@ public class CarControllerFindAllIntegrationTest {
 	}
 	
 	@Test
-	public void testFindAllVehiclesParking() throws Exception {
+	public void testFindAllVehiclesParking() {
 		setupDatabase(2);
 		ResponseEntity<HappyParkingResponse> entity = restTemplate.getForEntity(url, HappyParkingResponse.class);
 		
@@ -58,22 +63,22 @@ public class CarControllerFindAllIntegrationTest {
         assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
         List<?> list = (List<?>) entity.getBody().getContent();
         for (Object object : list) {
-			assertThat(object).extracting("plate").isNotEmpty();
-			assertThat(object).extracting("type").contains("Carro");
-			assertThat(object).extracting("parking").isNotEmpty();
-			assertThat(object).extracting("parkingOrders").isNotEmpty();
+			assertThat(object).extracting(plateField).isNotEmpty();
+			assertThat(object).extracting(typeField).contains(VehicleType.CAR.getValue());
+			assertThat(object).extracting(parkingField).isNotEmpty();
+			assertThat(object).extracting(parkingOrdersField).isNotEmpty();
 		}
 	}
 	
-	private void setupDatabase(int size) throws Exception {
+	private void setupDatabase(int size){
 		for (int i = 0; i < size; i++) {
 			setupDatabase("DFG1"+i);
 		}
 	}
 	
-	private void setupDatabase(String plate) throws Exception {
+	private void setupDatabase(String plate){
 		Car car = CarTestBuilder.create()
-				.withPlate(plate).build();
+				.withPlate(plate).withIsParking().build();
 		carService.getInVehicle(car);
 	}
 

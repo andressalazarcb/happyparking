@@ -1,4 +1,4 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking.integration;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.jersey.motorcycle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,7 +35,7 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class MotorcycleControllerGetOutIntegrationTest {
+public class MotorcycleControllerJerseyGetOutIntegrationTest {
 	
 	private String url = "/parkinglot/motorcycles/";
 	private String plateField = "plate";

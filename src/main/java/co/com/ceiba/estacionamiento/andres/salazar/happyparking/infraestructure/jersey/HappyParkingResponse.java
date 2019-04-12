@@ -6,14 +6,14 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class HappyParkingResponse {
-	
+
 	private int status;
 	private Object content;
-	
+
 	public Object getContent() {
 		return content;
 	}
-	
+
 	public void setContent(Object content) {
 		this.content = content;
 	}

@@ -12,7 +12,7 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycl
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
 
 @Component
-public class SettlementMotorcycleContext implements Settlement<Motorcycle> {
+class SettlementMotorcycleContext implements Settlement<Motorcycle> {
 	
 	private List<CalculateSettlement<Motorcycle>> settlements;
 

@@ -8,7 +8,7 @@ public abstract class AbstractVehicleRequestJersey {
 	
 	public String getPlate() {
 		if(this.plate == null || this.plate.trim().isEmpty()) {
-			throw new HappyParkingException("La placa es requerida");
+			throw new HappyParkingException("messages.vehicle.exception.noplate.value");
 		}
 		return plate;
 	}

@@ -37,7 +37,7 @@ public class MotorcycleServiceTest {
 
 
 	@Test
-	public void testSaveExist() throws Exception {
+	public void testSaveExist(){
 		Motorcycle motorcycle = MotorcycleTestBuilder
 				.create()
 				.withCC(400)
@@ -57,7 +57,7 @@ public class MotorcycleServiceTest {
 	}
 	
 	@Test
-	public void testSaveNew() throws Exception {
+	public void testSaveNew(){
 		Motorcycle motorcycle = MotorcycleTestBuilder
 				.create()
 				.withCC(400)
@@ -76,7 +76,7 @@ public class MotorcycleServiceTest {
 	}
 	
 	@Test(expected = HappyParkingException.class)
-	public void testSaveExistNoSpaceToParking() throws Exception {
+	public void testSaveExistNoSpaceToParking(){
 		Motorcycle motorcycle = MotorcycleTestBuilder
 				.create()
 				.withCC(400)
@@ -94,7 +94,7 @@ public class MotorcycleServiceTest {
 	}
 	
 	@Test(expected = HappyParkingException.class)
-	public void testSaveExistIsInThereSameVehicle() throws Exception {
+	public void testSaveExistIsInThereSameVehicle(){
 		Motorcycle motorcycle = MotorcycleTestBuilder
 				.create()
 				.withCC(400)
@@ -209,7 +209,7 @@ public class MotorcycleServiceTest {
 	}
 	
 	@Test
-	public void testFindVehicle() throws Exception {
+	public void testFindVehicle(){
 		String plate = "JHG365";
 		Motorcycle moto = MotorcycleTestBuilder
 				.create()
@@ -224,7 +224,7 @@ public class MotorcycleServiceTest {
 	}
 	
 	@Test
-	public void testFindVehicleNotContent() throws Exception {
+	public void testFindVehicleNotContent(){
 		String plate = "JNG365";
 		
 		when(motorcycleRepository.findById(anyString())).thenReturn(Optional.empty());

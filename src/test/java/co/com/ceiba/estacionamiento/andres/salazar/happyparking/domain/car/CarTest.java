@@ -11,8 +11,7 @@ public class CarTest {
 		Car car = new Car();
 		assertFields(car);
 	}
-	
-	
+
 	@Test
 	public void testCopyOne() {
 		Car currentCar = CarTestBuilder.create().build();
@@ -20,7 +19,7 @@ public class CarTest {
 		car.copy(currentCar);
 		assertFields(car);
 	}
-	
+
 	@Test
 	public void testCopyTwo() {
 		Car currentCar = CarTestBuilder.create().withParkingOrders(null).build();
@@ -28,13 +27,12 @@ public class CarTest {
 		car.copy(currentCar);
 		assertFields(car);
 	}
-	
+
 	private void assertFields(Car car) {
 		assertThat(car).hasFieldOrProperty("plate");
 		assertThat(car).hasFieldOrProperty("type");
 		assertThat(car).hasFieldOrProperty("parkingOrders");
 		assertThat(car).hasFieldOrProperty("isParking");
 	}
-	
 
 }

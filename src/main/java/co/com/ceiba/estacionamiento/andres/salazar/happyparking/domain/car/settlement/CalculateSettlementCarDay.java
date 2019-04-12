@@ -9,7 +9,7 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.Car;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
 
 @Component
-public class CalculateSettlementCarDay implements CalculateSettlement<Car>{
+class CalculateSettlementCarDay implements CalculateSettlement<Car>{
 
 	@Override
 	public BigDecimal getPrice(Car car, ParkingOrder parkingOrder) {

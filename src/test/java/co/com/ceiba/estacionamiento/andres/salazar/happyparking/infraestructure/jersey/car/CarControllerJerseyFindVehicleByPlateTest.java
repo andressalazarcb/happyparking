@@ -22,9 +22,13 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class CarControllerJerseyTest {
+public class CarControllerJerseyFindVehicleByPlateTest {
 	
 	private String url = "/parkinglot/cars/";
+	private String plateField = "plate";
+	private String typeField = "type";
+	private String parkingField = "parking";
+	private String parkingOrdersField = "parkingOrders";
 	
 	@Autowired
     private TestRestTemplate restTemplate;
@@ -56,10 +60,10 @@ public class CarControllerJerseyTest {
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(entity.getBody()).isInstanceOf(HappyParkingResponse.class);
         Object object =  entity.getBody().getContent();
-        assertThat(object).extracting("plate").isNotEmpty();
-		assertThat(object).extracting("type").contains("Carro");
-		assertThat(object).extracting("parking").isNotEmpty();
-		assertThat(object).extracting("parkingOrders").isNotEmpty();
+        assertThat(object).extracting(plateField).isNotEmpty();
+		assertThat(object).extracting(typeField).contains("Carro");
+		assertThat(object).extracting(parkingField).isNotEmpty();
+		assertThat(object).extracting(parkingOrdersField).isNotEmpty();
 	}
 	
 	@Test

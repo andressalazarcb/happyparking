@@ -18,17 +18,19 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingor
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.repository.CarRepositoryMongo;
 
 @Service
-public class CarServiceBusiness implements CarService {
+class CarServiceBusiness implements CarService {
 
 	private CarRepositoryMongo carRepository;
 
 	private Settlement<Car> carSettlement;
-	
+
 	private CarFactory carFactory;
-	
+
 	private ParkingOrderFactory parkingOrderFactory;
-	
+
 	private VerifyGetIn<Car> verifyGetIn;
+
+	private String msgException = "messages.vehicle.exception.notexist.value";
 
 	@Autowired
 	public CarServiceBusiness(CarRepositoryMongo carRepository, Settlement<Car> carSettlement, CarFactory carFactory,
@@ -40,25 +42,24 @@ public class CarServiceBusiness implements CarService {
 		this.verifyGetIn = verifyGetIn;
 	}
 
-
 	@Override
 	public Car getOutVehicle(String plate) {
 		Car carFound = carRepository.findByPlateAndParkingActive(plate);
-		if(carFound == null) {
-			throw new HappyParkingException("No esta el vehiculo en el parqueadero");
+		if (carFound == null) {
+			throw new HappyParkingException(msgException);
 		}
 		ListIterator<ParkingOrder> parkingOrders = carFound.getParkingOrders().listIterator();
 		while (parkingOrders.hasNext()) {
 			ParkingOrder parkingOrder = parkingOrders.next();
-			if(parkingOrder.isActive() && parkingOrder.getEndDate() == null) {
+			if (parkingOrder.isActive() && parkingOrder.getEndDate() == null) {
 				parkingOrder.setEndDate(System.currentTimeMillis());
 				parkingOrder.setPrice(carSettlement.calculate(carFound, parkingOrder));
-				if(parkingOrder.getPrice().equals(BigDecimal.ZERO))
+				if (parkingOrder.getPrice().equals(BigDecimal.ZERO))
 					parkingOrder.setActive(false);
 				carFound.setParking(false);
 			}
 		}
-		
+
 		return carRepository.save(carFound);
 	}
 
@@ -69,32 +70,32 @@ public class CarServiceBusiness implements CarService {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public Car findVehicle(String plate) {
 		Optional<Car> optional = carRepository.findById(plate);
-		if(optional.isPresent()) {
+		if (optional.isPresent()) {
 			return optional.get();
 		}
 		return null;
 	}
-	
+
 	@Override
-	public Car getInVehicle(Car vehicle){
+	public Car getInVehicle(Car vehicle) {
 		verifyGetIn(vehicle);
 		try {
 			Car currentCar = null;
 			Optional<Car> optional = carRepository.findById(vehicle.getPlate());
-			
-			if(optional.isPresent())
+
+			if (optional.isPresent())
 				currentCar = optional.get();
-			
-			if(currentCar != null) {
+
+			if (currentCar != null) {
 				currentCar.setParking(true);
 				ParkingOrder parkingOrder = parkingOrderFactory.getObject();
 				parkingOrder.createParkingOrderId(vehicle.getPlate());
 				currentCar.getParkingOrders().add(parkingOrder);
-			}else {
+			} else {
 				currentCar = carFactory.getObject();
 				currentCar.setPlate(vehicle.getPlate());
 				ParkingOrder parkingOrder = parkingOrderFactory.getObject();
@@ -106,10 +107,10 @@ public class CarServiceBusiness implements CarService {
 			throw new HappyParkingSystemException(e);
 		}
 	}
-	
+
 	private void verifyGetIn(Car car) {
 		HappyParkingException exception = verifyGetIn.check(car);
-		if(exception != null)
+		if (exception != null)
 			throw exception;
 	}
 

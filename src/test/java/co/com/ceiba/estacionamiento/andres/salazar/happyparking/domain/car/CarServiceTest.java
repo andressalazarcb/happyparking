@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,16 +38,8 @@ public class CarServiceTest {
 	@Autowired
 	private ParkingOrderFactory parkingOrderFactory;
 
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
 	@Test
-	public void testGetInVehicle() throws Exception {
+	public void testGetInVehicle(){
 		Car car = CarTestBuilder
 				.create()
 				.build();
@@ -66,7 +56,7 @@ public class CarServiceTest {
 	}
 	
 	@Test
-	public void testGetInVehicleNew() throws Exception {
+	public void testGetInVehicleNew(){
 		Car car = CarTestBuilder
 				.create()
 				.build();
@@ -75,7 +65,7 @@ public class CarServiceTest {
 		when(carRepository.save(any(Car.class))).thenReturn(car);
 		when(carRepository.findCarByPlateAndIsParking(car.getPlate(), true) ).thenReturn(null);
 		when(carRepository.findCountCarsByIsParking(true)).thenReturn(5l);
-		when(happyParkingTime.geCurrentDay()).thenReturn("Sunday");
+		when(happyParkingTime.geCurrentDay()).thenReturn("Monday");
 		
 		Car carSaved = carService.getInVehicle(car);
 		
@@ -83,7 +73,7 @@ public class CarServiceTest {
 	}
 	
 	@Test(expected = HappyParkingException.class)
-	public void testGetInVehicleNoAbleToParking() throws Exception {
+	public void testGetInVehicleNoAbleToParking(){
 		Car car = CarTestBuilder
 				.create()
 				.withPlate("AAA123")
@@ -99,7 +89,7 @@ public class CarServiceTest {
 	}
 	
 	@Test(expected = HappyParkingException.class)
-	public void testGetInVehicleSameVehicleInParkingLot() throws Exception {
+	public void testGetInVehicleSameVehicleInParkingLot(){
 		Car car = CarTestBuilder
 				.create()
 				.build();
@@ -108,13 +98,13 @@ public class CarServiceTest {
 		when(carRepository.save(any(Car.class))).thenReturn(car);
 		when(carRepository.findCarByPlateAndIsParking(car.getPlate(), true) ).thenReturn(car);
 		when(carRepository.findCountCarsByIsParking(true)).thenReturn(5l);
-		when(happyParkingTime.geCurrentDay()).thenReturn("Wednesday");
+		when(happyParkingTime.geCurrentDay()).thenReturn("Tuesday");
 		
 		carService.getInVehicle(car);
 	}
 	
 	@Test(expected = HappyParkingException.class)
-	public void testGetInVehicleNotSpaceToParking() throws Exception {
+	public void testGetInVehicleNotSpaceToParking(){
 		Car car = CarTestBuilder
 				.create()
 				.build();
@@ -123,7 +113,7 @@ public class CarServiceTest {
 		when(carRepository.save(any(Car.class))).thenReturn(car);
 		when(carRepository.findCarByPlateAndIsParking(car.getPlate(), true) ).thenReturn(null);
 		when(carRepository.findCountCarsByIsParking(true)).thenReturn(20l);
-		when(happyParkingTime.geCurrentDay()).thenReturn("Wednesday");
+		when(happyParkingTime.geCurrentDay()).thenReturn("Friday");
 		
 		carService.getInVehicle(car);
 	}
@@ -213,7 +203,7 @@ public class CarServiceTest {
 	}
 	
 	@Test
-	public void testFindVehicle() throws Exception {
+	public void testFindVehicle(){
 		String plate = "JHG365";
 		Car car = CarTestBuilder
 				.create()
@@ -228,7 +218,7 @@ public class CarServiceTest {
 	}
 	
 	@Test
-	public void testFindVehicleNotContent() throws Exception {
+	public void testFindVehicleNotContent(){
 		String plate = "JNG365";
 		
 		when(carRepository.findById(anyString())).thenReturn(Optional.empty());

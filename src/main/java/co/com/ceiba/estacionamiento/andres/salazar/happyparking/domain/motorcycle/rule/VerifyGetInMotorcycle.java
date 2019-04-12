@@ -11,17 +11,21 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VerifyGet
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.Motorcycle;
 
 @Component
-public class VerifyGetInMotorcycle implements VerifyGetIn<Motorcycle>{
-	
-	@Autowired
+class VerifyGetInMotorcycle implements VerifyGetIn<Motorcycle> {
+
 	private List<Rule<Motorcycle>> rules;
+
+	@Autowired
+	public VerifyGetInMotorcycle(List<Rule<Motorcycle>> rules) {
+		this.rules = rules;
+	}
 
 	@Override
 	public HappyParkingException check(Motorcycle vehicle) {
 		HappyParkingException exception = null;
 		for (Rule<Motorcycle> rule : rules) {
 			exception = rule.excecute(vehicle);
-			if(exception != null)
+			if (exception != null)
 				break;
 		}
 		return exception;

@@ -25,16 +25,17 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.
 @Path("/parkinglot/motorcycles")
 public class MotorcycleControllerJersey {
 	
-	@Autowired
-    private ObjectFactory<HappyParkingResponse> happyParkingResponseObjectFactory;
-	
-	private VehicleParking<Motorcycle> vehicleParking;
+	private ObjectFactory<HappyParkingResponse> happyParkingResponseObjectFactory;
 
+	private VehicleParking<Motorcycle> vehicleParking;
+	
+	
 	@Autowired
-	public MotorcycleControllerJersey(VehicleParking<Motorcycle> vehicleParking) {
+	public MotorcycleControllerJersey(ObjectFactory<HappyParkingResponse> happyParkingResponseObjectFactory,
+			VehicleParking<Motorcycle> vehicleParking) {
+		this.happyParkingResponseObjectFactory = happyParkingResponseObjectFactory;
 		this.vehicleParking = vehicleParking;
 	}
-
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -45,13 +46,8 @@ public class MotorcycleControllerJersey {
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
 		happyParkingResponse.setStatus(Status.CREATED.getStatusCode());
 		happyParkingResponse.setContent(motorcycleSaved);
-		return Response
-			      .status(Status.CREATED)
-			      .entity(happyParkingResponse)
-			      .type(MediaType.APPLICATION_JSON)
-			      .build();
+		return Response.status(Status.CREATED).entity(happyParkingResponse).type(MediaType.APPLICATION_JSON).build();
 	}
-	
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -59,17 +55,13 @@ public class MotorcycleControllerJersey {
 		Status status = Status.NO_CONTENT;
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
 		Stream<Motorcycle> stream = vehicleParking.findVehiclesThatAreParking();
-		if(stream != null) {
+		if (stream != null) {
 			status = Status.OK;
 			happyParkingResponse.setStatus(Status.OK.getStatusCode());
 			happyParkingResponse.setContent(vehicleParking.findVehiclesThatAreParking());
 		}
-		return Response
-			      .status(status)
-			      .entity(happyParkingResponse)
-			      .build();
+		return Response.status(status).entity(happyParkingResponse).build();
 	}
-
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -80,12 +72,9 @@ public class MotorcycleControllerJersey {
 		Motorcycle motorcycleOut = vehicleParking.getOutVehicleOfParkingLot(motorcycle.getPlate());
 		happyParkingResponse.setContent(motorcycleOut);
 		happyParkingResponse.setStatus(Status.OK.getStatusCode());
-		return Response
-			      .status(Status.OK)
-			      .entity(happyParkingResponse)
-			      .build();
+		return Response.status(Status.OK).entity(happyParkingResponse).build();
 	}
-	
+
 	@GET
 	@Path("{plate}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -93,14 +82,14 @@ public class MotorcycleControllerJersey {
 		Status status = Status.NO_CONTENT;
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
 		Motorcycle moto = vehicleParking.findVehicleByPlate(plate);
-		if(moto != null) {
+		if (moto != null) {
 			status = Status.OK;
 			happyParkingResponse.setStatus(Status.OK.getStatusCode());
 			happyParkingResponse.setContent(moto);
 		}
 		return Response.status(status).entity(happyParkingResponse).build();
 	}
-	
+
 	private Motorcycle getMotorcycleFromMotorcycleRequestJersey(MotorcycleRequestJersey requestJersey) {
 		Motorcycle motorcycle = new Motorcycle();
 		motorcycle.setCc(requestJersey.getCc());

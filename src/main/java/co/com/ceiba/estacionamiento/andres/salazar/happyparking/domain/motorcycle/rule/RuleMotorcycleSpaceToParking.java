@@ -9,15 +9,21 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycl
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.repository.MotorcycleRepositoryMongo;
 
 @Component
-public class RuleMotorcycleSpaceToParking implements Rule<Motorcycle>{
-	
-	@Autowired
+class RuleMotorcycleSpaceToParking implements Rule<Motorcycle> {
+
 	private MotorcycleRepositoryMongo motorcycleRepository;
+	
+	private String msgException = "messages.motorcycle.exception.nospace.value";
+
+	@Autowired
+	public RuleMotorcycleSpaceToParking(MotorcycleRepositoryMongo motorcycleRepository) {
+		this.motorcycleRepository = motorcycleRepository;
+	}
 
 	public HappyParkingException excecute(Motorcycle vehicle) {
 		Long countMotorcycles = motorcycleRepository.findCountMotorcycleByIsParking(true);
 		if (countMotorcycles >= 10) {
-			return new HappyParkingException("no hay espacio para motos");
+			return new HappyParkingException(msgException);
 		}
 		return null;
 	}

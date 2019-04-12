@@ -25,13 +25,14 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.
 @Path("/parkinglot/cars")
 public class CarControllerJersey {
 
-	@Autowired
 	private ObjectFactory<HappyParkingResponse> happyParkingResponseObjectFactory;
 
 	private VehicleParking<Car> vehicleParking;
 
 	@Autowired
-	public CarControllerJersey(VehicleParking<Car> vehicleParking) {
+	public CarControllerJersey(ObjectFactory<HappyParkingResponse> happyParkingResponseObjectFactory,
+			VehicleParking<Car> vehicleParking) {
+		this.happyParkingResponseObjectFactory = happyParkingResponseObjectFactory;
 		this.vehicleParking = vehicleParking;
 	}
 
@@ -53,18 +54,12 @@ public class CarControllerJersey {
 		Status status = Status.NO_CONTENT;
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
 		Stream<Car> stream = vehicleParking.findVehiclesThatAreParking();
-		if(stream != null) {
+		if (stream != null) {
 			status = Status.OK;
 			happyParkingResponse.setStatus(Status.OK.getStatusCode());
 			happyParkingResponse.setContent(vehicleParking.findVehiclesThatAreParking());
 		}
 		return Response.status(status).entity(happyParkingResponse).build();
-	}
-
-	private Car getCarFromCarRequestJersey(CarRequestJersey requestJersey) {
-		Car car = new Car();
-		car.setPlate(requestJersey.getPlate());
-		return car;
 	}
 
 	@PUT
@@ -76,12 +71,9 @@ public class CarControllerJersey {
 		Car carOut = vehicleParking.getOutVehicleOfParkingLot(car.getPlate());
 		happyParkingResponse.setContent(carOut);
 		happyParkingResponse.setStatus(Status.OK.getStatusCode());
-		return Response
-			      .status(Status.OK)
-			      .entity(happyParkingResponse)
-			      .build();
+		return Response.status(Status.OK).entity(happyParkingResponse).build();
 	}
-	
+
 	@GET
 	@Path("{plate}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -89,12 +81,18 @@ public class CarControllerJersey {
 		Status status = Status.NO_CONTENT;
 		HappyParkingResponse happyParkingResponse = happyParkingResponseObjectFactory.getObject();
 		Car car = vehicleParking.findVehicleByPlate(plate);
-		if(car != null) {
+		if (car != null) {
 			status = Status.OK;
 			happyParkingResponse.setStatus(Status.OK.getStatusCode());
 			happyParkingResponse.setContent(car);
 		}
 		return Response.status(status).entity(happyParkingResponse).build();
+	}
+
+	private Car getCarFromCarRequestJersey(CarRequestJersey requestJersey) {
+		Car car = new Car();
+		car.setPlate(requestJersey.getPlate());
+		return car;
 	}
 
 }

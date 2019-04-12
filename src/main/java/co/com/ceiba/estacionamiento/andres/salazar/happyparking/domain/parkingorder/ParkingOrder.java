@@ -10,9 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Document
-@JsonIgnoreProperties(
-		value = { "days", "hours", "totalHours" }
-		)
+@JsonIgnoreProperties(value = { "days", "hours", "totalHours" })
 public class ParkingOrder {
 
 	@Id
@@ -63,12 +61,12 @@ public class ParkingOrder {
 	}
 
 	@Transient
-	public  long  getDays() {
+	public long getDays() {
 		long totalHours = getTotalHours();
 		long limitDayOne = totalHours / 9l;
-		if(limitDayOne >= 1) {
+		if (limitDayOne >= 1) {
 			long limitDayTwo = totalHours / 24l;
-			if(limitDayTwo >= 1) {
+			if (limitDayTwo >= 1) {
 				return limitDayTwo;
 			}
 		}
@@ -79,9 +77,9 @@ public class ParkingOrder {
 	public long getHours() {
 		long days = getDays();
 		long totalHours = getTotalHours();
-		if(days >= 1) {
+		if (days >= 1) {
 			long hoursLeft = totalHours - (24 * days);
-			if(hoursLeft < 0) {
+			if (hoursLeft < 0) {
 				return 0;
 			}
 			return hoursLeft;
@@ -91,7 +89,7 @@ public class ParkingOrder {
 
 	@Transient
 	public long getTotalHours() {
-		if(startDate != null && endDate != null) {
+		if (startDate != null && endDate != null) {
 			return TimeUnit.MILLISECONDS.toHours(endDate - startDate);
 		}
 		return 0l;

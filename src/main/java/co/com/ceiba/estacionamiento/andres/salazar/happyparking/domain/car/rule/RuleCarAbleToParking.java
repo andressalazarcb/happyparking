@@ -9,22 +9,27 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.Car;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.system.HappyParkingTime;
 
 @Component
-public class RuleCarAbleToParking implements Rule<Car>{
-	
-	@Autowired
+class RuleCarAbleToParking implements Rule<Car> {
+
 	private HappyParkingTime happyParkingTime;
+
+	private String msdException = "messages.car.exception.ableday.value";
+
+	@Autowired
+	public RuleCarAbleToParking(HappyParkingTime happyParkingTime) {
+		this.happyParkingTime = happyParkingTime;
+	}
 
 	public HappyParkingException excecute(Car vehicle) {
 		if (vehicle.getPlate().toUpperCase().startsWith("A") && !isAbleDayToPlateStartWithA()) {
-			return new HappyParkingException("no puede ingresar porque no esta en un dia habil");
+			return new HappyParkingException(msdException);
 		}
 		return null;
 	}
-	
+
 	private boolean isAbleDayToPlateStartWithA() {
 		switch (happyParkingTime.geCurrentDay()) {
 		case "Sunday":
-			return true;
 		case "Monday":
 			return true;
 		default:

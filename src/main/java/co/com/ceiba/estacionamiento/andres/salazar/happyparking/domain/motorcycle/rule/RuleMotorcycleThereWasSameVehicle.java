@@ -9,15 +9,21 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycl
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.repository.MotorcycleRepositoryMongo;
 
 @Component
-public class RuleMotorcycleThereWasSameVehicle implements Rule<Motorcycle>{
-	
-	@Autowired
+class RuleMotorcycleThereWasSameVehicle implements Rule<Motorcycle> {
+
 	private MotorcycleRepositoryMongo motorcycleRepository;
+	
+	private String msgException = "messages.vehicle.exception.exist.value";
+
+	@Autowired
+	public RuleMotorcycleThereWasSameVehicle(MotorcycleRepositoryMongo motorcycleRepository) {
+		this.motorcycleRepository = motorcycleRepository;
+	}
 
 	public HappyParkingException excecute(Motorcycle vehicle) {
 		Motorcycle motorcycleFound = motorcycleRepository.findMotorcycleByPlateAndIsParking(vehicle.getPlate(), true);
 		if (motorcycleFound != null) {
-			return new HappyParkingException("hay un vehiculo parqueado");
+			return new HappyParkingException(msgException);
 		}
 		return null;
 	}

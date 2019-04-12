@@ -8,6 +8,7 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.AbstractVehicle;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VehicleType;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
 
 @Document(collection = "vehicles")
@@ -15,14 +16,6 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingor
 public class Motorcycle extends AbstractVehicle{
 	
 	private int cc;
-
-	public int getCc() {
-		return cc;
-	}
-
-	public void setCc(int cc) {
-		this.cc = cc;
-	}
 	
 	public void copy(Motorcycle that) {
 		this.setParking(that.isParking());
@@ -36,5 +29,17 @@ public class Motorcycle extends AbstractVehicle{
 		}
 	}
 	
+	public int getCc() {
+		return cc;
+	}
+
+	public void setCc(int cc) {
+		this.cc = cc;
+	}
+
+	@Override
+	public String getType() {
+		return VehicleType.MOTORCYCLE.getValue();
+	}
 
 }

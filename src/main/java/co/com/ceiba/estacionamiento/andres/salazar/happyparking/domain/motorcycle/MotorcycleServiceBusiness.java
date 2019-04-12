@@ -12,14 +12,13 @@ import org.springframework.stereotype.Service;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingSystemException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Settlement;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VehicleType;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VerifyGetIn;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrderFactory;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.repository.MotorcycleRepositoryMongo;
 
 @Service
-public class MotorcycleServiceBusiness implements MotorcycleService {
+class MotorcycleServiceBusiness implements MotorcycleService {
 	
 	private MotorcycleFactory motorcycleFactory;
 	
@@ -30,6 +29,8 @@ public class MotorcycleServiceBusiness implements MotorcycleService {
 	private Settlement<Motorcycle> motorcycleSettlement;
 	
 	private VerifyGetIn<Motorcycle> verifyGetIn;
+	
+	private String msgException = "messages.vehicle.exception.notexist.value";
 
 	@Autowired
 	public MotorcycleServiceBusiness(MotorcycleFactory motorcycleFactory, ParkingOrderFactory parkingOrderFactory,
@@ -46,7 +47,7 @@ public class MotorcycleServiceBusiness implements MotorcycleService {
 	public Motorcycle getOutVehicle(String plate) {
 		Motorcycle motorcycleFound = motorcycleRepository.findByPlateAndParkingActive(plate);
 		if(motorcycleFound == null) {
-			throw new HappyParkingException("No esta el vehiculo en el parqueadero");
+			throw new HappyParkingException(msgException);
 		}
 		ListIterator<ParkingOrder> parkingOrders = motorcycleFound.getParkingOrders().listIterator();
 		while (parkingOrders.hasNext()) {
@@ -92,7 +93,6 @@ public class MotorcycleServiceBusiness implements MotorcycleService {
 				currentMotorcycle.copy(vehicle);
 				currentMotorcycle.setPlate(vehicle.getPlate());
 				currentMotorcycle.setParking(true);
-				currentMotorcycle.setType(VehicleType.MOTORCYCLE.getValue());
 				ParkingOrder parkingOrder = parkingOrderFactory.getObject();
 				parkingOrder.createParkingOrderId(vehicle.getPlate());
 				currentMotorcycle.setParkingOrders(Arrays.asList(parkingOrder));

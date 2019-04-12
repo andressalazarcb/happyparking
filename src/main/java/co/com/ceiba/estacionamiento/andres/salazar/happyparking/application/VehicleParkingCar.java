@@ -9,7 +9,7 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.Car;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.CarService;
 
 @Component
-public class VehicleParkingCar implements VehicleParking<Car>{
+class VehicleParkingCar implements VehicleParking<Car>{
 	
 	private CarService carService;
 
