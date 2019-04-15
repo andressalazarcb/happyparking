@@ -1,0 +1,32 @@
+version: '3.5'
+
+services:
+
+  mongo:
+    image: mongo
+    container_name: "mongodb"
+    restart: always
+    ports:
+        - 27017:27017
+    volumes:
+        - ./mongodbdata:/etc/mongo
+    networks:
+        - mynet
+    
+    
+  happyparking:
+    image: happyparking:latest
+    build: .
+    container_name: "happyparking"
+    restart: always
+    ports:
+        - 8181:8081
+    networks:
+        - mynet
+    environment:
+        - MONGODB_URL=mongodb
+
+networks:
+  mynet:
+      name: mynet
+      driver: bridge
