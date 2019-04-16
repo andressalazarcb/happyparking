@@ -8,13 +8,13 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycl
 
 public interface MotorcycleRepositoryMongo extends VehicleBaseRepository<Motorcycle> {
 
-	@Query(value = "{'isParking' : ?0}", count = true)
+	@Query(value = "{'isParking' : ?0, '_class':'motorcycle'}", count = true)
 	Long findCountMotorcycleByIsParking(boolean isParking);
 
-	@Query("{'plate': ?0, 'isParking' : ?1}")
+	@Query("{'plate': ?0, , 'isParking' : ?1, '_class':'motorcycle'}")
 	Motorcycle findMotorcycleByPlateAndIsParking(String plate, boolean isParking);
 	
-	@Query(value = "{'isParking' : true}")
+	@Query(value = "{'isParking' : true, '_class':'motorcycle'}")
 	Stream<Motorcycle> findAllMotorcyclesByIsParkingTrueAndStream();
 
 }

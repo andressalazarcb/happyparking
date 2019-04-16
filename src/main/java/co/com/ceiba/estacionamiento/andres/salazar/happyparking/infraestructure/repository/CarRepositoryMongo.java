@@ -8,13 +8,13 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.Car;
 
 public interface CarRepositoryMongo extends VehicleBaseRepository<Car> {
 
-	@Query("{'plate': ?0, 'isParking' : ?1}")
+	@Query("{'plate': ?0, 'isParking' : ?1, '_class':'car'}")
 	Car findCarByPlateAndIsParking(String plate, boolean isParking);
 
-	@Query(value = "{'isParking' : ?0}", count = true)
+	@Query(value = "{'isParking' : ?0, '_class':'car'}", count = true)
 	Long findCountCarsByIsParking(boolean isParking);
 
-	@Query(value = "{'isParking' : true}")
+	@Query(value = "{'isParking' : true, '_class':'car'}")
 	Stream<Car> findAllCarsByIsParkingTrueAndStream();
 
 }
