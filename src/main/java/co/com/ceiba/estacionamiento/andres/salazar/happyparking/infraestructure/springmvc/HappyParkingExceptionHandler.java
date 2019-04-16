@@ -27,14 +27,17 @@ public class HappyParkingExceptionHandler extends ResponseEntityExceptionHandler
 	@ExceptionHandler(HappyParkingException.class)
 	public final ResponseEntity<String> handleUserNotFoundException(HappyParkingException ex, WebRequest request) {
 		String msg = ex.getMessage();
-		msg = msg.replaceAll("co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingException: ","");
+		msg = msg.replaceAll("co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingException: ",
+				"");
+		System.err.println(ex);
 		return new ResponseEntity<>(bundle.getString(msg), HttpStatus.NOT_FOUND);
 	}
-	
+
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<String> handleAllExceptions(Exception ex, WebRequest request) {
-	  return new ResponseEntity<>(bundle.getString("messages.system.exception.unknown.value"), HttpStatus.INTERNAL_SERVER_ERROR);
+		System.err.println(ex);
+		return new ResponseEntity<>(bundle.getString("messages.system.exception.unknown.value"),
+				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
 
 }
