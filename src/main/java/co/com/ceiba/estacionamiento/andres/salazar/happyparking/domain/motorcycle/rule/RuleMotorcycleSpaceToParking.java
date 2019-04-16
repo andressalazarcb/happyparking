@@ -1,28 +1,20 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.rule;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingException;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Rule;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.exception.HappyParkingException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.Motorcycle;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.repository.MotorcycleRepositoryMongo;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.ParkingLot;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.rule.Rule;
 
 @Component
 class RuleMotorcycleSpaceToParking implements Rule<Motorcycle> {
-
-	private MotorcycleRepositoryMongo motorcycleRepository;
 	
 	private String msgException = "messages.motorcycle.exception.nospace.value";
 
-	@Autowired
-	public RuleMotorcycleSpaceToParking(MotorcycleRepositoryMongo motorcycleRepository) {
-		this.motorcycleRepository = motorcycleRepository;
-	}
-
-	public HappyParkingException excecute(Motorcycle vehicle) {
-		Long countMotorcycles = motorcycleRepository.findCountMotorcycleByIsParking(true);
-		if (countMotorcycles >= 10) {
+	@Override
+	public HappyParkingException excecute(ParkingLot<Motorcycle> parkingLot) {
+		if (parkingLot.getQuantity() >= 10) {
 			return new HappyParkingException(msgException);
 		}
 		return null;

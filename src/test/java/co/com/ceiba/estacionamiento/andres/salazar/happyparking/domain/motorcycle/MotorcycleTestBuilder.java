@@ -3,7 +3,7 @@ package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcyc
 import java.util.ArrayList;
 import java.util.List;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VehicleType;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.VehicleType;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
 
 public class MotorcycleTestBuilder {

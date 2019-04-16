@@ -1,24 +1,26 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.AbstractVehicle;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.VehicleType;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-public class Motorcycle extends AbstractVehicle{
+
+@Document(collection = "vehicles")
+@TypeAlias("motorcycle")
+public class MotorcycleEntity extends AbstractVehicle{
 	
 	private int cc;
 	
-	public void copy(Motorcycle that) {
+	public void copy(MotorcycleEntity that) {
 		this.setParking(that.isParking());
 		this.setPlate(that.getPlate());
 		this.setType(that.getType());
 		this.setCc(that.getCc());
 		if(that.getParkingOrders() != null && !that.getParkingOrders().isEmpty()) {
-			List<ParkingOrder> parkingOrders = new ArrayList<>();
+			List<ParkingOrderEntity> parkingOrders = new ArrayList<>();
 			Collections.copy(parkingOrders, that.getParkingOrders());
 			this.setParkingOrders(parkingOrders);
 		}

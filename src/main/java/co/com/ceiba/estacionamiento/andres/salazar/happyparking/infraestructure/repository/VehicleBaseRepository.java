@@ -3,8 +3,6 @@ package co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.AbstractVehicle;
-
 public interface VehicleBaseRepository <T extends AbstractVehicle> extends CrudRepository<T, String>{
 	
 	@Query("{'plate': ?0, 'isParking' : true}")

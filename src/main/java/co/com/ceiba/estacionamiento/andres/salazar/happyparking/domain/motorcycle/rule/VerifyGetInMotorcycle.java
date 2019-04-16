@@ -5,10 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingException;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Rule;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.VerifyGetIn;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.exception.HappyParkingException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.Motorcycle;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.ParkingLot;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.rule.Rule;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.rule.VerifyGetIn;
 
 @Component
 class VerifyGetInMotorcycle implements VerifyGetIn<Motorcycle> {
@@ -21,10 +22,10 @@ class VerifyGetInMotorcycle implements VerifyGetIn<Motorcycle> {
 	}
 
 	@Override
-	public HappyParkingException check(Motorcycle vehicle) {
+	public HappyParkingException check(ParkingLot<Motorcycle> parkingLot) {
 		HappyParkingException exception = null;
 		for (Rule<Motorcycle> rule : rules) {
-			exception = rule.excecute(vehicle);
+			exception = rule.excecute(parkingLot);
 			if (exception != null)
 				break;
 		}

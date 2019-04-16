@@ -1,28 +1,22 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.rule;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.HappyParkingException;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.Rule;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.exception.HappyParkingException;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.Motorcycle;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.repository.MotorcycleRepositoryMongo;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.ParkingLot;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.rule.Rule;
 
 @Component
 class RuleMotorcycleThereWasSameVehicle implements Rule<Motorcycle> {
 
-	private MotorcycleRepositoryMongo motorcycleRepository;
 	
 	private String msgException = "messages.vehicle.exception.exist.value";
 
-	@Autowired
-	public RuleMotorcycleThereWasSameVehicle(MotorcycleRepositoryMongo motorcycleRepository) {
-		this.motorcycleRepository = motorcycleRepository;
-	}
-
-	public HappyParkingException excecute(Motorcycle vehicle) {
-		Motorcycle motorcycleFound = motorcycleRepository.findMotorcycleByPlateAndIsParking(vehicle.getPlate(), true);
-		if (motorcycleFound != null) {
+	@Override
+	public HappyParkingException excecute(ParkingLot<Motorcycle> parkingLot) {
+		Motorcycle motorcycleFound = parkingLot.getVehicleIn();
+		if (motorcycleFound != null && motorcycleFound.isParking()) {
 			return new HappyParkingException(msgException);
 		}
 		return null;

@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Component;
 
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.CalculateSettlement;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car.Car;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.settlement.CalculateSettlement;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder.ParkingOrder;
 
 @Component

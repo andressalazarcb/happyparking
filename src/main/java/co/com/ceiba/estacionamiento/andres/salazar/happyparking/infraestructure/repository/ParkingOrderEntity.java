@@ -1,12 +1,19 @@
-package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkingorder;
+package co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure.repository;
 
 import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-public class ParkingOrder {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@Document
+@JsonIgnoreProperties(value = { "days", "hours", "totalHours" })
+class ParkingOrderEntity {
+
+	@Id
 	private String parkingOrderId;
 	private Long startDate;
 	private Long endDate;

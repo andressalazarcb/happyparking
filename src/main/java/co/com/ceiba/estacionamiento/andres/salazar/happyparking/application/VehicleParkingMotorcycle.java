@@ -1,37 +1,31 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.application;
 
-import java.util.stream.Stream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.application.api.VehicleParking;
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.Motorcycle;
-import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.motorcycle.MotorcycleService;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.ParkingLot;
+import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.ParkingLotService;
 
 @Component
 class VehicleParkingMotorcycle implements VehicleParking<Motorcycle> {
-
-	private MotorcycleService motorcycleService;
-
+	
+	private ParkingLotService<Motorcycle> parkingLotService;
+	
 	@Autowired
-	public VehicleParkingMotorcycle(MotorcycleService motorcycleService) {
-		this.motorcycleService = motorcycleService;
+	public VehicleParkingMotorcycle(ParkingLotService<Motorcycle> parkingLotService) {
+		this.parkingLotService = parkingLotService;
 	}
 
-	public Motorcycle getInVehicleToParkingLot(Motorcycle vehicle) {
-		return motorcycleService.getInVehicle(vehicle);
+	@Override
+	public Motorcycle getInVehicle(ParkingLot<Motorcycle> parkingLot) {
+		return parkingLotService.getInVehicle(parkingLot);
 	}
 
-	public Motorcycle getOutVehicleOfParkingLot(String plate) {
-		return motorcycleService.getOutVehicle(plate);
-	}
-
-	public Stream<Motorcycle> findVehiclesThatAreParking() {
-		return motorcycleService.findAllVehiclesParking();
-	}
-
-	public Motorcycle findVehicleByPlate(String plate) {
-		return motorcycleService.findVehicle(plate);
+	@Override
+	public Motorcycle getOutVehicle(ParkingLot<Motorcycle> parkingLot) {
+		return parkingLotService.getOutVehicle(parkingLot);
 	}
 
 }
