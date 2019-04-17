@@ -18,7 +18,7 @@ public class Motorcycle extends AbstractVehicle{
 		this.setType(that.getType());
 		this.setCc(that.getCc());
 		if(that.getParkingOrders() != null && !that.getParkingOrders().isEmpty()) {
-			List<ParkingOrder> parkingOrders = new ArrayList<>();
+			List<ParkingOrder> parkingOrders = new ArrayList<>(that.getParkingOrders().size());
 			Collections.copy(parkingOrders, that.getParkingOrders());
 			this.setParkingOrders(parkingOrders);
 		}

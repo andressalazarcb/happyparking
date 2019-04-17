@@ -15,7 +15,7 @@ public class Car extends AbstractVehicle {
 		this.setPlate(that.getPlate());
 		this.setType(that.getType());
 		if (that.getParkingOrders() != null && !that.getParkingOrders().isEmpty()) {
-			List<ParkingOrder> parkingOrders = new ArrayList<>();
+			List<ParkingOrder> parkingOrders = new ArrayList<>(that.getParkingOrders().size());
 			Collections.copy(parkingOrders, that.getParkingOrders());
 			this.setParkingOrders(parkingOrders);
 		}
