@@ -6,8 +6,6 @@ services:
     image: mongo
     container_name: "mongodb"
     restart: always
-    ports:
-        - 27017:27017
     volumes:
         - /tmp/mongodbdata:/data/db
     networks:
@@ -19,8 +17,6 @@ services:
     build: .
     container_name: "happyparking"
     restart: always
-    ports:
-        - 8181:8081
     networks:
         - mynet
     environment:
