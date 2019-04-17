@@ -1,7 +1,6 @@
 package co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.car;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.parkinglot.AbstractVehicle;
@@ -15,8 +14,7 @@ public class Car extends AbstractVehicle {
 		this.setPlate(that.getPlate());
 		this.setType(that.getType());
 		if (that.getParkingOrders() != null && !that.getParkingOrders().isEmpty()) {
-			List<ParkingOrder> parkingOrders = new ArrayList<>(that.getParkingOrders().size());
-			Collections.copy(parkingOrders, that.getParkingOrders());
+			List<ParkingOrder> parkingOrders = new ArrayList<>(that.getParkingOrders());
 			this.setParkingOrders(parkingOrders);
 		}
 	}
