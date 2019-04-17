@@ -2,6 +2,8 @@ package co.com.ceiba.estacionamiento.andres.salazar.happyparking.infraestructure
 
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ import co.com.ceiba.estacionamiento.andres.salazar.happyparking.domain.exception
 @ControllerAdvice
 @RestController
 public class HappyParkingExceptionHandler extends ResponseEntityExceptionHandler {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(HappyParkingExceptionHandler.class);
 
 	private final ResourceBundle bundle;
 
@@ -34,6 +38,7 @@ public class HappyParkingExceptionHandler extends ResponseEntityExceptionHandler
 
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<String> handleAllExceptions(Exception ex, WebRequest request) {
+		LOG.error(bundle.getString("messages.system.exception.unknown.value"), ex);
 		return new ResponseEntity<>(bundle.getString("messages.system.exception.unknown.value"),
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
